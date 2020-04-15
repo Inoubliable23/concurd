@@ -9,7 +9,7 @@ const App = () => {
     <div>
 			<GlobalStyle />
       <Switch>
-				<Route exact path='/' component={WatchPage} />
+				<Route exact path='/' render={() => <WatchPage playlistId={'1'} />} />
 			</Switch>
     </div>
   );

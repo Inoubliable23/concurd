@@ -1,7 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import axios from 'axios';
+
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
+import { selectOrderedVideosIds } from '../../redux/playlist/playlist.selectors';
 
 const Container = styled.div`
 	display: flex;
@@ -17,18 +21,19 @@ const VideoWithPlaylist = styled.div`
 	border: 1px solid #fff;
 `
 
-const WatchPage = () => {
-
-	const videoId = '2g811Eo7K8U';
-
+const WatchPage = ({ playlistId, orderedVideosIds }) => {
 	return (
 		<Container>
 			<VideoWithPlaylist>
-				<YoutubeVideo videoId={videoId} />
-				<Playlist />
+				<YoutubeVideo videoId={orderedVideosIds[0]} />
+				<Playlist playlistId={playlistId} orderedVideosIds={orderedVideosIds} />
 			</VideoWithPlaylist>
 		</Container>
 	);
 }
 
-export default WatchPage;
+const mapStateToProps = (state, props) => ({
+	orderedVideosIds: selectOrderedVideosIds(state, props.playlistId)
+});
+
+export default connect(mapStateToProps)(WatchPage);

@@ -1,13 +1,16 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { GlobalStyle } from './global.styles';
 
-import YoutubeVideo from './components/youtube-video/youtube-video.component';
+import WatchPage from './pages/watch/watch.component';
 
 const App = () => {
   return (
     <div>
 			<GlobalStyle />
-      <YoutubeVideo />
+      <Switch>
+				<Route exact path='/' component={WatchPage} />
+			</Switch>
     </div>
   );
 }

@@ -5,20 +5,17 @@ const YoutubeVideo = () => {
 
 	const videoId = '2g811Eo7K8U';
 	const opts = {
-		height: '390',
-		width: '640',
+		height: '100%',
 		playerVars: {
-			autoplay: 1,
+			autoplay: 0,
 		}
 	}
 
 	return (
-		<div>
-			<YouTube
-				videoId={videoId}
-				opts={opts}
-			/>
-		</div>
+		<YouTube
+			videoId={videoId}
+			opts={opts}
+		/>
 	);
 }
 

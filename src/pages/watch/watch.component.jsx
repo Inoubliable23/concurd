@@ -1,17 +1,33 @@
 import React from 'react';
-
+import styled from 'styled-components';
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
-import { VideoWithPlaylist, WatchPageContainer } from './watch.styles';
+
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`
+
+const VideoWithPlaylist = styled.div`
+	display: flex;
+	height: 370px;
+	width: 100%;
+	max-width: 1100px;
+	border: 1px solid #fff;
+`
 
 const WatchPage = () => {
+
+	const videoId = '2g811Eo7K8U';
+
 	return (
-		<WatchPageContainer>
+		<Container>
 			<VideoWithPlaylist>
-				<YoutubeVideo />
+				<YoutubeVideo videoId={videoId} />
 				<Playlist />
 			</VideoWithPlaylist>
-		</WatchPageContainer>
+		</Container>
 	);
 }
 

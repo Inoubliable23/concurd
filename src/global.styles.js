@@ -17,4 +17,9 @@ export const GlobalStyle = createGlobalStyle`
 	a {
 		text-decoration: none;
 	}
+
+	.youtube-container {
+		height: 100%;
+		min-width: 500px;
+	}
 `

@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 
-import { selectVideos } from '../../redux/playlist/playlist.selectors';
 import PlaylistVideoPreview from '../playlist-video-preview/playlist-video-preview.component';
 
 const Container = styled.div`
@@ -21,18 +19,14 @@ const Container = styled.div`
 	}
 `
 
-const Playlist = ({ playlistId, orderedVideosIds, videos }) => {
+const Playlist = ({ playlist }) => {
 	return (
 		<Container>
 			{
-				orderedVideosIds.map(videoId => <PlaylistVideoPreview key={videoId} playlistId={playlistId} {...videos[videoId]} />)
+				playlist.videos.map(video => <PlaylistVideoPreview key={video.id} playlistId={playlist.id} {...video} />)
 			}
 		</Container>
 	);
 }
 
-const mapStateToProps = (state, props) => ({
-	videos: selectVideos(state, props.playlistId)
-});
-
-export default connect(mapStateToProps)(Playlist);
+export default Playlist;

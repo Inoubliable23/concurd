@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
-import { selectOrderedVideosIds } from '../../redux/playlist/playlist.selectors';
+import { selectPlaylist } from '../../redux/playlist/playlist.selectors';
 import VideosSearch from '../../components/videos-search/videos-search.component';
 
 const Container = styled.div`
@@ -27,14 +27,14 @@ const PlaylistWithSearch = styled.div`
 	flex-direction: column;
 `
 
-const WatchPage = ({ playlistId, orderedVideosIds }) => {
+const WatchPage = ({ playlist }) => {
 	return (
 		<Container>
 			<VideoWithPlaylist>
-				<YoutubeVideo videoId={orderedVideosIds[0]} />
+				<YoutubeVideo videoId={playlist.videos[0].id} />
 				<PlaylistWithSearch>
 					<VideosSearch />
-					<Playlist playlistId={playlistId} orderedVideosIds={orderedVideosIds} />
+					<Playlist playlist={playlist} />
 				</PlaylistWithSearch>
 			</VideoWithPlaylist>
 		</Container>
@@ -42,7 +42,7 @@ const WatchPage = ({ playlistId, orderedVideosIds }) => {
 }
 
 const mapStateToProps = (state, props) => ({
-	orderedVideosIds: selectOrderedVideosIds(state, props.playlistId)
+	playlist: selectPlaylist(state, props.playlistId)
 });
 
 export default connect(mapStateToProps)(WatchPage);

@@ -12,11 +12,11 @@ const Container = styled.div`
 	}
 `
 
-const PreviewImg = styled.img`
-	width: 150px;
+const Thumbnail = styled.img`
+	width: 130px;
 `
 
-const PreviewInfoContainer = styled.div`
+const InfoContainer = styled.div`
 	padding: 10px 20px;
 	flex: 1;
 `
@@ -50,11 +50,11 @@ const PlaylistVideoPreview = ({ playlistId, id, imgUrl, title, addedBy, removeVi
 
 	return (
 		<Container>
-			<PreviewImg src={imgUrl} />
-			<PreviewInfoContainer>
+			<Thumbnail src={imgUrl} />
+			<InfoContainer>
 				<Title>{title}</Title>
 				<AddedBy>added by <AddedByName>{addedBy}</AddedByName></AddedBy>
-			</PreviewInfoContainer>
+			</InfoContainer>
 			<RemoveIcon onClick={handleRemoveClick}>&#10006;</RemoveIcon>
 		</Container>
 	);

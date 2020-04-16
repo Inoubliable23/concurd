@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import axios from 'axios';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
 import { selectOrderedVideosIds } from '../../redux/playlist/playlist.selectors';
+import VideosSearch from '../../components/videos-search/videos-search.component';
 
 const Container = styled.div`
 	display: flex;
@@ -21,12 +21,21 @@ const VideoWithPlaylist = styled.div`
 	border: 1px solid #fff;
 `
 
+const PlaylistWithSearch = styled.div`
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+`
+
 const WatchPage = ({ playlistId, orderedVideosIds }) => {
 	return (
 		<Container>
 			<VideoWithPlaylist>
 				<YoutubeVideo videoId={orderedVideosIds[0]} />
-				<Playlist playlistId={playlistId} orderedVideosIds={orderedVideosIds} />
+				<PlaylistWithSearch>
+					<VideosSearch />
+					<Playlist playlistId={playlistId} orderedVideosIds={orderedVideosIds} />
+				</PlaylistWithSearch>
 			</VideoWithPlaylist>
 		</Container>
 	);

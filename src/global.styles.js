@@ -5,12 +5,12 @@ export const GlobalStyle = createGlobalStyle`
 		box-sizing: border-box;
 		padding: 0;
 		margin: 0;
-		color: #fff;
 		font-family: 'Roboto', 'sans-serif';
 	}
 
 	body {
 		background-color: #11111B;
+		color: #fff;
 		padding: 20px;
 	}
 

@@ -1,11 +1,23 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { removeVideoFromCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+
+const fadedOut = css`
+	padding-top: 0;
+	padding-bottom: 0;
+	opacity: 0;
+	max-height: 0;
+`
 
 const Container = styled.div`
 	display: flex;
 	padding: 5px 10px;
+	opacity: 1;
+	max-height: 200px;
+	transition: opacity 200ms, max-height 200ms, padding-top 200ms, padding-bottom 200ms;
+
+	${({ fadeOut }) => (fadeOut ? fadedOut : null)}
 
 	&:hover {
 		background-color: rgba(80, 80, 80, 0.3);
@@ -49,14 +61,20 @@ const RemoveIcon = styled.span`
 
 const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, removeVideoFromCurrentPlaylist }) => {
 
+	const [fadeOut, setFadeOut] = useState(false);
+
 	const handleRemoveClick = () => {
+		setFadeOut(true);
+	}
+
+	const handleTransitionEnd = () => {
 		removeVideoFromCurrentPlaylist({
 			videoId: id
 		});
 	}
 
 	return (
-		<Container>
+		<Container fadeOut={fadeOut} onTransitionEnd={handleTransitionEnd}>
 			<Thumbnail src={thumbnailUrl} />
 			<InfoContainer>
 				<Title>{title}</Title>

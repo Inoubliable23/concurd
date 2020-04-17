@@ -15,16 +15,19 @@ const initialState = {
 	currentPlaylistId: null
 }
 
-export default (state = initialState, { type, payload }) => {
+export default (state = initialState, { type, payload }, userState) => {
 	return produce(state, draft => {
 		switch (type) {
 
 			case ADD_VIDEO_TO_CURRENT_PLAYLIST: {
 				const { video } = payload;
-				video.addedBy = 'unknown';
+				const videoObject = {
+					...video,
+					addedBy: userState.currentUser.name
+				};
 				const playlistToUpdate = draft.playlists[state.currentPlaylistId];
 
-				playlistToUpdate.videos.byId[video.id] = video;
+				playlistToUpdate.videos.byId[video.id] = videoObject;
 				playlistToUpdate.videos.orderedIds.push(video.id);
 				break;
 			}

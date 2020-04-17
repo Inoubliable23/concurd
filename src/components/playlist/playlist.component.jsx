@@ -5,7 +5,6 @@ import PlaylistVideoPreview from '../playlist-video-preview/playlist-video-previ
 
 const Container = styled.div`
 	flex: 1;
-	padding: 10px;
 	overflow-y: scroll;
 
 	&::-webkit-scrollbar {

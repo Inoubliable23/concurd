@@ -1,14 +1,22 @@
-import { ADD_VIDEO, REMOVE_VIDEO } from './playlist.types';
+import { ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, SET_CURRENT_PLAYLIST } from './playlist.types';
 
-export const addVideo = video => ({
-	type: ADD_VIDEO,
-	payload: video
+export const addVideoToCurrentPlaylist = video => ({
+	type: ADD_VIDEO_TO_CURRENT_PLAYLIST,
+	payload: {
+		video
+	}
 });
 
-export const removeVideo = (playlistId, videoId) => ({
-	type: REMOVE_VIDEO,
+export const removeVideoFromCurrentPlaylist = ({ videoId }) => ({
+	type: REMOVE_VIDEO_FROM_CURRENT_PLAYLIST,
 	payload: {
-		playlistId,
 		videoId
+	}
+});
+
+export const setCurrentPlaylist = ({ playlistId }) => ({
+	type: SET_CURRENT_PLAYLIST,
+	payload: {
+		playlistId
 	}
 });

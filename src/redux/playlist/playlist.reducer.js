@@ -1,64 +1,48 @@
 import produce from 'immer';
-import { ADD_VIDEO, REMOVE_VIDEO } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST } from './playlist.types';
 
 const initialState = {
 	playlists: {
 		'1': {
+			id: '1',
 			name: 'My Playlist',
 			videos: {
-				byId: {
-					'7wNPJJoIzP4': {
-						id: '7wNPJJoIzP4',
-						title: 'Kingston - Alle Alle',
-						addedBy: 'Jernej Lipovec',
-						imgUrl: 'https://img.youtube.com/vi/Uvt3DIgxNsc/0.jpg'
-					},
-					'2': {
-						id: '2',
-						title: 'Nipke - Všeč tko k je',
-						addedBy: 'Tim Janželj',
-						imgUrl: 'https://img.youtube.com/vi/7wNPJJoIzP4/0.jpg'
-					},
-					'3': {
-						id: '3',
-						title: 'Challe Salle - Lagano',
-						addedBy: 'Jakob Makovec',
-						imgUrl: 'https://img.youtube.com/vi/JaPwLN5-21o/0.jpg'
-					},
-					'4': {
-						id: '4',
-						title: 'Challe Salle - Lagano',
-						addedBy: 'Jakob Makovec',
-						imgUrl: 'https://img.youtube.com/vi/JaPwLN5-21o/0.jpg'
-					}
-				},
-				orderedIds: ['7wNPJJoIzP4', '2', '3', '4']
+				byId: {},
+				orderedIds: []
 			}
 		}
-	}
+	},
+	currentPlaylistId: null
 }
 
 export default (state = initialState, { type, payload }) => {
 	return produce(state, draft => {
 		switch (type) {
 
-			case ADD_VIDEO:
-				const playlistToUpdate = draft.playlists[payload.playlistId];
-				if (playlistToUpdate) {
-					playlistToUpdate.videos.byId[payload.video.id] = payload.video;
-				}
+			case ADD_VIDEO_TO_CURRENT_PLAYLIST: {
+				const { video } = payload;
+				video.addedBy = 'unknown';
+				const playlistToUpdate = draft.playlists[state.currentPlaylistId];
+
+				playlistToUpdate.videos.byId[video.id] = video;
+				playlistToUpdate.videos.orderedIds.push(video.id);
 				break;
-			case REMOVE_VIDEO:
-				const { playlistId, videoId } = payload;
-				const playlistToDelete = draft.playlists[playlistId];
-				if (playlistToDelete) {
-					const index = playlistToDelete.videos.orderedIds.indexOf(videoId);
-					if (index > -1) {
-						playlistToDelete.videos.orderedIds.splice(index, 1);
-					}
-					delete draft.playlists[playlistId].videos[videoId];
+			}
+			case REMOVE_VIDEO_FROM_CURRENT_PLAYLIST: {
+				const { videoId } = payload;
+				const playlist = draft.playlists[state.currentPlaylistId];
+				const index = playlist.videos.orderedIds.indexOf(videoId);
+				
+				if (index > -1) {
+					playlist.videos.orderedIds.splice(index, 1);
 				}
+				delete playlist.videos.byId[videoId];
 				break;
+			}
+			case SET_CURRENT_PLAYLIST: {
+				draft.currentPlaylistId = payload.playlistId;
+				break;
+			}
 
 			default:
 				return draft;

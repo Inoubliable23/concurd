@@ -23,7 +23,12 @@ const Playlist = ({ playlist }) => {
 	return (
 		<Container>
 			{
-				playlist.videos.map(video => <PlaylistVideoPreview key={video.id} playlistId={playlist.id} {...video} />)
+				playlist.videos.map(video => (
+					<PlaylistVideoPreview
+						key={video.id}
+						{...video}
+					/>
+				))
 			}
 		</Container>
 	);

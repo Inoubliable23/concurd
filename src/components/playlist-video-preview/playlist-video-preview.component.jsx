@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { removeVideo } from '../../redux/playlist/playlist.actions';
+import { removeVideoFromCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	display: flex;
@@ -42,15 +42,17 @@ const RemoveIcon = styled.span`
 	cursor: pointer;
 `
 
-const PlaylistVideoPreview = ({ playlistId, id, imgUrl, title, addedBy, removeVideo }) => {
+const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, removeVideoFromCurrentPlaylist }) => {
 
 	const handleRemoveClick = () => {
-		removeVideo(playlistId, id);
+		removeVideoFromCurrentPlaylist({
+			videoId: id
+		});
 	}
 
 	return (
 		<Container>
-			<Thumbnail src={imgUrl} />
+			<Thumbnail src={thumbnailUrl} />
 			<InfoContainer>
 				<Title>{title}</Title>
 				<AddedBy>added by <AddedByName>{addedBy}</AddedByName></AddedBy>
@@ -61,7 +63,7 @@ const PlaylistVideoPreview = ({ playlistId, id, imgUrl, title, addedBy, removeVi
 }
 
 const mapDispatchToProps = {
-	removeVideo: removeVideo
+	removeVideoFromCurrentPlaylist
 };
 
 export default connect(null, mapDispatchToProps)(PlaylistVideoPreview);

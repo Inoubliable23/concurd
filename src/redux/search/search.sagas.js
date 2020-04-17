@@ -24,12 +24,12 @@ const fetchSearchFailure = errorMessage => ({
 function* fetchSearchAsync({ payload: { queryString } }) {
 	try {
 		const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
-		console.log(process.env);
 
 		const response = yield axios.get(`${YOUTUBE_API_URL}/search`, {
 			params: {
 				key: process.env.REACT_APP_YOUTUBE_API_KEY,
 				part: 'snippet',
+				type: 'video',
 				q: queryString
 			}
 		});

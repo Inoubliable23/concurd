@@ -1,5 +1,15 @@
 import React from 'react';
 import YouTube from 'react-youtube';
+import styled from 'styled-components';
+
+const Empty = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #000;
+	opacity: 0.7;
+	min-width: 500px;
+`
 
 const YoutubeVideo = ({ videoId }) => {
 
@@ -12,11 +22,16 @@ const YoutubeVideo = ({ videoId }) => {
 	}
 
 	return (
+		videoId ?
 		<YouTube
 			videoId={videoId}
 			opts={opts}
 			containerClassName='youtube-container'
 		/>
+		:
+		<Empty>
+			No videos to display
+		</Empty>
 	);
 }
 

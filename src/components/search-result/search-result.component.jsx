@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { clearSearchResults } from '../../redux/search/search.actions';
 
 const Container = styled.div`
 	display: flex;
@@ -36,16 +39,27 @@ const ChannelName = styled.div`
 	color: #888;
 `
 
-const SearchResult = ({ id, title, thumbnailUrl, channelName }) => {
+const SearchResult = ({ video, addVideoToCurrentPlaylist, clearSearchResults }) => {
+
+	const handleResultClick = () => {
+		addVideoToCurrentPlaylist(video);
+		clearSearchResults();
+	}
+	
 	return (
-		<Container>
-			<Thumbnail src={thumbnailUrl} />
+		<Container onClick={handleResultClick}>
+			<Thumbnail src={video.thumbnailUrl} />
 			<InfoContainer>
-				<Title><>{title}</></Title>
-				<ChannelName>{channelName}</ChannelName>
+				<Title><>{video.title}</></Title>
+				<ChannelName>{video.channelName}</ChannelName>
 			</InfoContainer>
 		</Container>
-	);
-}
+	)
+};
 
-export default SearchResult;
+const mapDispatchToProps = {
+	addVideoToCurrentPlaylist,
+	clearSearchResults
+};
+
+export default connect(null, mapDispatchToProps)(SearchResult);

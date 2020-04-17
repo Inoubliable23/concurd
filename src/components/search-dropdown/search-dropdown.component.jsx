@@ -11,7 +11,7 @@ const SearchDropdown = ({ searchResults }) => {
 	return (
 		<Container>
 			{
-				searchResults.map(result => <SearchResult key={result.id} {...result} />)
+				searchResults.map(result => <SearchResult key={result.id} video={result} />)
 			}
 		</Container>
 	);

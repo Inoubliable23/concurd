@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
+import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
 import VideosSearch from '../../components/videos-search/videos-search.component';
-import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import PlaylistHeader from '../../components/playlist-header/playlist-header.component';
 
 const Container = styled.div`
 	display: flex;
@@ -23,9 +25,9 @@ const VideoWithPlaylist = styled.div`
 `
 
 const PlaylistWithSearch = styled.div`
-	flex: 1;
 	display: flex;
 	flex-direction: column;
+	width: 50%;
 `
 
 const WatchPage = ({ playlist, setCurrentPlaylist }) => {
@@ -43,8 +45,9 @@ const WatchPage = ({ playlist, setCurrentPlaylist }) => {
 				<VideoWithPlaylist>
 					<YoutubeVideo videoId={playlist.videos[0] ? playlist.videos[0].id : null} />
 					<PlaylistWithSearch>
-						<VideosSearch />
+						<PlaylistHeader playlist={playlist} />
 						<Playlist playlist={playlist} />
+						<VideosSearch />
 					</PlaylistWithSearch>
 				</VideoWithPlaylist>
 			}

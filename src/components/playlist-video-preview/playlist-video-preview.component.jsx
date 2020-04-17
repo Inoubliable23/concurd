@@ -5,7 +5,7 @@ import { removeVideoFromCurrentPlaylist } from '../../redux/playlist/playlist.ac
 
 const Container = styled.div`
 	display: flex;
-	padding: 10px;
+	padding: 5px 10px;
 
 	&:hover {
 		background-color: rgba(80, 80, 80, 0.3);
@@ -13,17 +13,22 @@ const Container = styled.div`
 `
 
 const Thumbnail = styled.img`
-	width: 130px;
+	width: 100px;
 `
 
 const InfoContainer = styled.div`
 	padding: 10px 20px;
 	flex: 1;
+	overflow: hidden;
 `
 
 const Title = styled.div`
 	font-size: 16px;
 	margin-bottom: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
 `
 
 const AddedBy = styled.div`

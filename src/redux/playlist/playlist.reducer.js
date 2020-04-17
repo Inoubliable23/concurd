@@ -6,6 +6,7 @@ const initialState = {
 		'1': {
 			id: '1',
 			name: 'My Playlist',
+			author: 'Tim Janzelj',
 			videos: {
 				byId: {},
 				orderedIds: []

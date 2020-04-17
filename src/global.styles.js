@@ -20,6 +20,6 @@ export const GlobalStyle = createGlobalStyle`
 
 	.youtube-container {
 		height: 100%;
-		min-width: 500px;
+		flex: 1;
 	}
 `

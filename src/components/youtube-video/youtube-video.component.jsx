@@ -8,7 +8,7 @@ const Empty = styled.div`
 	justify-content: center;
 	background-color: #000;
 	opacity: 0.7;
-	min-width: 500px;
+	flex: 1;
 `
 
 const YoutubeVideo = ({ videoId }) => {

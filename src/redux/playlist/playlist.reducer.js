@@ -8,8 +8,16 @@ const initialState = {
 			name: 'My Playlist',
 			author: 'Tim Janzelj',
 			videos: {
-				byId: {},
-				orderedIds: []
+				byId: {
+					'WUcXQ--yGWQ': {
+						id: 'WUcXQ--yGWQ',
+						title: 'MØ - Final Song (Official Video)',
+						thumbnailUrl: 'https://i.ytimg.com/vi/WUcXQ--yGWQ/default.jpg',
+						channelName: 'MOMOMOYOUTHVEVO',
+						addedBy: 'Tim Janzelj'
+					}
+				},
+				orderedIds: ['WUcXQ--yGWQ']
 			}
 		}
 	},

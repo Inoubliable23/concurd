@@ -20,6 +20,12 @@ export const GlobalStyle = createGlobalStyle`
 
 	.youtube-container {
 		height: 100%;
-		flex: 1;
+
+		/* hack to hide youtube added widgets (e.g. related videos) */
+		& iframe {
+			position: absolute;
+			top: -100%;
+			height: 300%;
+		}
 	}
 `

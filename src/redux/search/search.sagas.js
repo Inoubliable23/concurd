@@ -2,7 +2,7 @@ import { throttle, put, all, call } from 'redux-saga/effects';
 import axios from 'axios';
 import { FETCH_SEARCH_START, FETCH_SEARCH_SUCCESS, FETCH_SEARCH_FAILURE } from './search.types';
 
-export function* onFetchSearchStart() {
+function* onFetchSearchStart() {
 	yield throttle(500, FETCH_SEARCH_START, fetchSearchAsync);
 }
 

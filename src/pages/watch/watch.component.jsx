@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
 import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { connectToSocket } from '../../redux/video/video.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
@@ -30,13 +31,17 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ playlist, setCurrentPlaylist }) => {
+const WatchPage = ({ playlist, setCurrentPlaylist, connectToSocket }) => {
 	
 	useEffect(() => {
 		setCurrentPlaylist({
 			playlistId: '1'
 		});
 	}, [setCurrentPlaylist]);
+	
+	useEffect(() => {
+		connectToSocket();
+	}, [connectToSocket]);
 
 	return (
 		<Container>
@@ -60,7 +65,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-	setCurrentPlaylist
+	setCurrentPlaylist,
+	connectToSocket
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatchPage);

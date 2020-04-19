@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import { removeVideoFromCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { ReactComponent as ThumbsUp } from '../../assets/thumbs-up.svg';
+import { ReactComponent as ThumbsUpFilled } from '../../assets/thumbs-up-filled.svg';
+import { removeVideoFromCurrentPlaylist, toggleLike } from '../../redux/playlist/playlist.actions';
+import { selectLikesCount, selectIsVideoLikedByCurrentUser } from '../../redux/playlist/playlist.selectors';
 
 const fadedOut = css`
 	padding-top: 0;
@@ -22,6 +25,25 @@ const Container = styled.div`
 	&:hover {
 		background-color: rgba(80, 80, 80, 0.3);
 	}
+`
+
+const LikesContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0 15px;
+`
+
+const ThumbsUpContainer = styled.div`
+	width: 35px;
+	height: 35px;
+	padding: 3px;
+	cursor: pointer;
+`
+
+const LikesCount = styled.div`
+	margin-top: 1px;
 `
 
 const Thumbnail = styled.img`
@@ -59,12 +81,18 @@ const RemoveIcon = styled.span`
 	cursor: pointer;
 `
 
-const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, removeVideoFromCurrentPlaylist }) => {
+const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, likesCount, isLiked, removeVideoFromCurrentPlaylist, toggleLike }) => {
 
 	const [fadeOut, setFadeOut] = useState(false);
 
 	const handleRemoveClick = () => {
 		setFadeOut(true);
+	}
+
+	const handleThumbsUpClick = () => {
+		toggleLike({
+			videoId: id
+		});
 	}
 
 	const handleTransitionEnd = () => {
@@ -75,6 +103,17 @@ const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, removeVideoFro
 
 	return (
 		<Container fadeOut={fadeOut} onTransitionEnd={handleTransitionEnd}>
+			<LikesContainer>
+				<ThumbsUpContainer onClick={handleThumbsUpClick}>
+				{
+					isLiked ?
+					<ThumbsUpFilled />
+					:
+					<ThumbsUp />
+				}
+				</ThumbsUpContainer>
+				<LikesCount>{likesCount}</LikesCount>
+			</LikesContainer>
 			<Thumbnail src={thumbnailUrl} />
 			<InfoContainer>
 				<Title>{title}</Title>
@@ -85,8 +124,14 @@ const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, removeVideoFro
 	);
 }
 
+const mapStateToProps = (state, props) => ({
+	likesCount: selectLikesCount(state, props.id),
+	isLiked: selectIsVideoLikedByCurrentUser(state, props.id)
+});
+
 const mapDispatchToProps = {
-	removeVideoFromCurrentPlaylist
+	removeVideoFromCurrentPlaylist,
+	toggleLike
 };
 
-export default connect(null, mapDispatchToProps)(PlaylistVideoPreview);
+export default connect(mapStateToProps, mapDispatchToProps)(PlaylistVideoPreview);

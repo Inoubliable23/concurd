@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	body {
-		background-color: #11111B;
+		background-color: #11121B;
 		color: #fff;
 		padding: 20px;
 	}

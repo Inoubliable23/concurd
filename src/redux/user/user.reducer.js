@@ -2,6 +2,7 @@ import produce from 'immer';
 
 const initialState = {
 	currentUser: {
+		id: '23',
 		name: 'Tim Janzelj'
 	}
 }

@@ -39,7 +39,7 @@ const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 		width: '100%',
 		playerVars: {
 			enablejsapi: 1,
-			autoplay: 1
+			autoplay: 0
 		}
 	}
 

@@ -42,7 +42,9 @@ const ChannelName = styled.div`
 const SearchResult = ({ video, addVideoToCurrentPlaylist, clearSearchResults }) => {
 
 	const handleResultClick = () => {
-		addVideoToCurrentPlaylist(video);
+		addVideoToCurrentPlaylist({
+			video
+		});
 		clearSearchResults();
 	}
 	

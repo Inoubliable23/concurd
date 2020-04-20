@@ -6,19 +6,14 @@ function* onFetchSearchStart() {
 	yield throttle(500, FETCH_SEARCH_START, fetchSearchAsync);
 }
 
-const fetchSearchSuccess = ({ queryString, searchResults }) => ({
+const fetchSearchSuccess = payload => ({
 	type: FETCH_SEARCH_SUCCESS,
-	payload: {
-		queryString,
-		searchResults
-	}
+	payload
 });
 
-const fetchSearchFailure = errorMessage => ({
+const fetchSearchFailure = payload => ({
 	type: FETCH_SEARCH_FAILURE,
-	payload: {
-		errorMessage
-	}
+	payload
 });
 
 function* fetchSearchAsync({ payload: { queryString } }) {

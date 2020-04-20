@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
-import { connectToSocket } from '../../redux/video/video.actions';
+import { connectToSocket, setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
@@ -32,15 +31,19 @@ const PlaylistWithSearch = styled.div`
 `
 
 const WatchPage = ({ playlist, setCurrentPlaylist, connectToSocket }) => {
+
+	const playlistId = '1';
 	
 	useEffect(() => {
 		setCurrentPlaylist({
-			playlistId: '1'
+			playlistId: playlistId
 		});
 	}, [setCurrentPlaylist]);
 	
 	useEffect(() => {
-		connectToSocket();
+		connectToSocket({
+			playlistId
+		});
 	}, [connectToSocket]);
 
 	return (

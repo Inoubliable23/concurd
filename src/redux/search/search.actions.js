@@ -1,10 +1,8 @@
 import { FETCH_SEARCH_START, CLEAR_SEARCH_RESULTS } from './search.types';
 
-export const fetchSearchStart = queryString => ({
+export const fetchSearchStart = payload => ({
 	type: FETCH_SEARCH_START,
-	payload: {
-		queryString
-	}
+	payload
 });
 
 export const clearSearchResults = () => ({

@@ -1,0 +1,1 @@
+export const selectCurrentUserId = state => state.user.currentUser.id;

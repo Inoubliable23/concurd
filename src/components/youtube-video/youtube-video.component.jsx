@@ -30,8 +30,6 @@ const Empty = styled.div`
 	opacity: 0.7;
 `
 
-let player;
-
 const opts = {
 	height: '100%',
 	width: '100%',
@@ -41,11 +39,18 @@ const opts = {
 	}
 }
 
+let player;
+
 const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 
 	useEffect(() => {
 		player = null;
-	}, []);
+		videoSetPlay();
+
+		return () => {
+			videoSetPause();
+		}
+	}, [videoSetPlay, videoSetPause, videoId]);
 
 	useEffect(() => {
 		if (player) {

@@ -2,7 +2,7 @@ import produce from 'immer';
 import { VIDEO_SET_PLAY, VIDEO_SET_PAUSE, VIDEO_PAUSED_VIA_SOCKET, VIDEO_PLAYED_VIA_SOCKET } from './video.types';
 
 const initialState = {
-	isPlaying: true
+	isPlaying: false
 }
 
 export default (state = initialState, { type, payload }) => {

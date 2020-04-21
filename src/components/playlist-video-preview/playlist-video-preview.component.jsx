@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import { ReactComponent as ThumbsUp } from '../../assets/thumbs-up.svg';
-import { ReactComponent as ThumbsUpFilled } from '../../assets/thumbs-up-filled.svg';
+import { ReactComponent as ThumbsUp } from '../../assets/icons/thumbs-up.svg';
+import { ReactComponent as ThumbsUpFilled } from '../../assets/icons/thumbs-up-filled.svg';
 import { removeVideoFromCurrentPlaylist, toggleLike } from '../../redux/playlist/playlist.actions';
 import { selectLikesCount, selectIsVideoLikedByCurrentUser } from '../../redux/playlist/playlist.selectors';
 

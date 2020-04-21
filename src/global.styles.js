@@ -9,13 +9,14 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	body {
-		background-color: #11121B;
+		background-color: #1C1C27;
 		color: #fff;
 		padding: 20px;
 	}
 
 	a {
 		text-decoration: none;
+		color: #fff;
 	}
 
 	.youtube-container {

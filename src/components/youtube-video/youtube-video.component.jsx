@@ -32,16 +32,20 @@ const Empty = styled.div`
 
 let player;
 
+const opts = {
+	height: '100%',
+	width: '100%',
+	playerVars: {
+		enablejsapi: 1,
+		autoplay: 1
+	}
+}
+
 const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 
-	const opts = {
-		height: '100%',
-		width: '100%',
-		playerVars: {
-			enablejsapi: 1,
-			autoplay: 0
-		}
-	}
+	useEffect(() => {
+		player = null;
+	}, []);
 
 	useEffect(() => {
 		if (player) {

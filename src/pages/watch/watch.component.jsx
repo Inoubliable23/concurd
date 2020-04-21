@@ -30,21 +30,21 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ playlist, setCurrentPlaylist, connectToSocket }) => {
+const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket }) => {
 
-	const playlistId = '1';
+	const playlistId = match.params.playlistId;
 	
 	useEffect(() => {
 		setCurrentPlaylist({
 			playlistId: playlistId
 		});
-	}, [setCurrentPlaylist]);
+	}, [setCurrentPlaylist, playlistId]);
 	
 	useEffect(() => {
 		connectToSocket({
 			playlistId
 		});
-	}, [connectToSocket]);
+	}, [connectToSocket, playlistId]);
 
 	return (
 		<Container>

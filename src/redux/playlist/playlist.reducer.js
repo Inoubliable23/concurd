@@ -6,13 +6,14 @@ const initialState = {
 		'1': {
 			id: '1',
 			name: 'My Playlist',
+			image: 'chill.jpg',
 			author: 'Tim Janzelj',
 			videos: {
 				byId: {
-					'WUcXQ--yGWQ': {
-						id: 'WUcXQ--yGWQ',
+					'cWuvnc6u93A': {
+						id: 'cWuvnc6u93A',
 						title: 'MØ - Final Song (Official Video)',
-						thumbnailUrl: 'https://i.ytimg.com/vi/WUcXQ--yGWQ/default.jpg',
+						thumbnailUrl: 'https://i.ytimg.com/vi/cWuvnc6u93A/default.jpg',
 						channelName: 'MOMOMOYOUTHVEVO',
 						addedBy: 'Tim Janzelj',
 						likedBy: {
@@ -36,7 +37,26 @@ const initialState = {
 						likedBy: {}
 					}
 				},
-				orderedIds: ['WUcXQ--yGWQ', 'sZfZ8uWaOFI', 'GbpnAGajyMc']
+				orderedIds: ['cWuvnc6u93A', 'sZfZ8uWaOFI', 'GbpnAGajyMc']
+			}
+		},
+		'2': {
+			id: '2',
+			name: 'nekineki',
+			image: 'night.jpg',
+			author: 'Tim Janzelj',
+			videos: {
+				byId: {
+					'sZfZ8uWaOFI': {
+						id:'sZfZ8uWaOFI',
+						title:'Aerosmith - Dream On',
+						thumbnailUrl:'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
+						channelName:'AerosmithVEVO',
+						addedBy:'Tim Janzelj',
+						likedBy: {}
+					}
+				},
+				orderedIds: ['sZfZ8uWaOFI']
 			}
 		}
 	},

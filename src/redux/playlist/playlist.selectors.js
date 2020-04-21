@@ -1,3 +1,8 @@
+export const selectAllPlaylists = state => {
+	const playlistsObject = state.playlists.playlists;
+	return Object.keys(playlistsObject).map(id => playlistsObject[id]);
+};
+
 export const selectCurrentPlaylist = state => {
 	const currentPlaylistId = state.playlists.currentPlaylistId;
 	if (!currentPlaylistId) return;

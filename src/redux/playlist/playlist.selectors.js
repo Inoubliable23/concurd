@@ -1,40 +1,39 @@
 export const selectAllPlaylists = state => {
-	const playlistsObject = state.playlists.playlists;
+	const playlistsObject = state.playlist.allPlaylists;
 	return Object.keys(playlistsObject).map(id => playlistsObject[id]);
 };
 
 export const selectCurrentPlaylist = state => {
-	const currentPlaylistId = state.playlists.currentPlaylistId;
+	const currentPlaylistId = state.playlist.currentPlaylistId;
 	if (!currentPlaylistId) return;
 
-	const playlist = state.playlists.playlists[currentPlaylistId];
-	const videosById = playlist.videos.byId;
-	const orderedIds = playlist.videos.orderedIds;
-	const orderedVideos = orderedIds.map(id => videosById[id]);
+	return state.playlist.allPlaylists[currentPlaylistId];
+};
 
-	return {
-		...playlist,
-		videos: orderedVideos
-	};
+export const selectPlaylistVideosWithData = state => {
+	const currentPlaylist = selectCurrentPlaylist(state);
+
+	const allVideosData = state.video.allVideos;
+	const videosWithData = currentPlaylist.videos.orderedIds.map(id => {
+		return {
+			...currentPlaylist.videos.byId[id],
+			...allVideosData[id]
+		}
+	});
+	return videosWithData;
 };
 
 export const selectLikesCount = (state, videoId) => {
-	const currentPlaylistId = state.playlists.currentPlaylistId;
-	if (!currentPlaylistId) return;
-
-	const playlist = state.playlists.playlists[currentPlaylistId];
-	const video = playlist.videos.byId[videoId];
+	const currentPlaylist = selectCurrentPlaylist(state);
+	const video = currentPlaylist.videos.byId[videoId];
 
 	return Object.keys(video.likedBy).length;
 };
 
 export const selectIsVideoLikedByCurrentUser = (state, videoId) => {
-	const currentPlaylistId = state.playlists.currentPlaylistId;
-	if (!currentPlaylistId) return;
-
-	const playlist = state.playlists.playlists[currentPlaylistId];
-	const video = playlist.videos.byId[videoId];
-	const currentUserId = state.user.currentUser.id;
+	const currentPlaylist = selectCurrentPlaylist(state);
+	const video = currentPlaylist.videos.byId[videoId];
+	const currentUserId = state.user.currentUser.name;
 
 	return !!video.likedBy[currentUserId];
 };

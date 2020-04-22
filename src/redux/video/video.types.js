@@ -1,5 +1,3 @@
-export const CONNECT_TO_SOCKET = 'CONNECT_TO_SOCKET';
-
 export const VIDEO_SET_PLAY = 'VIDEO_SET_PLAY';
 export const VIDEO_SET_PAUSE = 'VIDEO_SET_PAUSE';
 

@@ -1,8 +1,10 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, TOGGLE_LIKE, LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST } from './playlist.types';
+import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
-	playlists: {
+	currentPlaylistId: null,
+	allPlaylists: {
 		'1': {
 			id: '1',
 			name: 'My Playlist',
@@ -12,9 +14,6 @@ const initialState = {
 				byId: {
 					'cWuvnc6u93A': {
 						id: 'cWuvnc6u93A',
-						title: 'MØ - Final Song (Official Video)',
-						thumbnailUrl: 'https://i.ytimg.com/vi/cWuvnc6u93A/default.jpg',
-						channelName: 'MOMOMOYOUTHVEVO',
 						addedBy: 'Tim Janzelj',
 						likedBy: {
 							'23': true
@@ -22,17 +21,11 @@ const initialState = {
 					},
 					'sZfZ8uWaOFI': {
 						id:'sZfZ8uWaOFI',
-						title:'Aerosmith - Dream On',
-						thumbnailUrl:'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
-						channelName:'AerosmithVEVO',
 						addedBy:'Tim Janzelj',
 						likedBy: {}
 					},
 					'GbpnAGajyMc': {
 						id: 'GbpnAGajyMc',
-						title: 'Come On Eileen',
-						thumbnailUrl: 'https://i.ytimg.com/vi/GbpnAGajyMc/default.jpg',
-						channelName: 'Dexy\'s Midnight Runners - Topic',
 						addedBy: 'Tim Janzelj',
 						likedBy: {}
 					}
@@ -49,9 +42,6 @@ const initialState = {
 				byId: {
 					'sZfZ8uWaOFI': {
 						id:'sZfZ8uWaOFI',
-						title:'Aerosmith - Dream On',
-						thumbnailUrl:'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
-						channelName:'AerosmithVEVO',
 						addedBy:'Tim Janzelj',
 						likedBy: {}
 					}
@@ -59,25 +49,29 @@ const initialState = {
 				orderedIds: ['sZfZ8uWaOFI']
 			}
 		}
-	},
-	currentPlaylistId: null
+	}
 }
 
-export default (state = initialState, { type, payload }, userState) => {
+export default (state = initialState, { type, payload }) => {
 	return produce(state, draft => {
 		switch (type) {
 
-			case ADD_VIDEO_TO_CURRENT_PLAYLIST:
+			case SET_CURRENT_PLAYLIST: {
+				draft.currentPlaylistId = payload.playlistId;
+				break;
+			}
+
+			case ADD_VIDEO:
 			case VIDEO_ADDED_VIA_SOCKET: {
-				const { video } = payload;
-				const videoObject = {
-					...video,
-					addedBy: userState.currentUser.name,
+				const { video, userId } = payload;
+				const playlistVideoObject = {
+					id: video.id,
+					addedBy: userId,
 					likedBy: {}
 				};
-				const playlistToUpdate = draft.playlists[state.currentPlaylistId];
+				const playlistToUpdate = draft.allPlaylists[state.currentPlaylistId];
 
-				playlistToUpdate.videos.byId[video.id] = videoObject;
+				playlistToUpdate.videos.byId[video.id] = playlistVideoObject;
 				playlistToUpdate.videos.orderedIds.push(video.id);
 				break;
 			}
@@ -85,7 +79,7 @@ export default (state = initialState, { type, payload }, userState) => {
 			case REMOVE_VIDEO_FROM_CURRENT_PLAYLIST:
 			case VIDEO_REMOVED_VIA_SOCKET: {
 				const { videoId } = payload;
-				const playlist = draft.playlists[state.currentPlaylistId];
+				const playlist = draft.allPlaylists[state.currentPlaylistId];
 				const index = playlist.videos.orderedIds.indexOf(videoId);
 				
 				if (index > -1) {
@@ -95,18 +89,13 @@ export default (state = initialState, { type, payload }, userState) => {
 				break;
 			}
 
-			case SET_CURRENT_PLAYLIST: {
-				draft.currentPlaylistId = payload.playlistId;
-				break;
-			}
-
 			case TOGGLE_LIKE:
 			case LIKE_TOGGLED_VIA_SOCKET: {
-				const { videoId } = payload;
-				const currentPlaylist = draft.playlists[state.currentPlaylistId];
+				const { videoId, userId } = payload;
+				const currentPlaylist = draft.allPlaylists[state.currentPlaylistId];
 				const video = currentPlaylist.videos.byId[videoId];
-				const isLiked = video.likedBy[userState.currentUser.id];
-				isLiked ? delete video.likedBy[userState.currentUser.id] : video.likedBy[userState.currentUser.id] = true;
+				const isLiked = video.likedBy[userId];
+				isLiked ? delete video.likedBy[userId] : video.likedBy[userId] = true;
 
 				currentPlaylist.videos.orderedIds.sort((a, b) => {
 					const likesCountA = Object.keys(currentPlaylist.videos.byId[a].likedBy).length;

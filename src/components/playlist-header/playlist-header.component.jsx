@@ -16,10 +16,10 @@ const PlaylistSubtitle = styled.div`
 	color: #aaa;
 `
 
-const PlaylistHeader = ({ playlist }) => (
+const PlaylistHeader = ({ name, author }) => (
 	<Container>
-		<PlaylistName>{playlist.name}</PlaylistName>
-		<PlaylistSubtitle>created by {playlist.author}</PlaylistSubtitle>
+		<PlaylistName>{name}</PlaylistName>
+		<PlaylistSubtitle>created by {author}</PlaylistSubtitle>
 	</Container>
 );
 

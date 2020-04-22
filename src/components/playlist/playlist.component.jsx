@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import PlaylistHeader from '../../components/playlist-header/playlist-header.component';
 import PlaylistVideoPreview from '../playlist-video-preview/playlist-video-preview.component';
+import { connect } from 'react-redux';
+import { selectPlaylistVideosWithData } from '../../redux/playlist/playlist.selectors';
 
 const Container = styled.div`
 	flex: 1;
@@ -18,11 +21,12 @@ const Container = styled.div`
 	}
 `
 
-const Playlist = ({ playlist }) => {
+const Playlist = ({ playlist, videos }) => {
 	return (
 		<Container>
+			<PlaylistHeader name={playlist.name} author={playlist.author} />
 			{
-				playlist.videos.map(video => (
+				videos.map(video => (
 					<PlaylistVideoPreview
 						key={video.id}
 						{...video}
@@ -33,4 +37,8 @@ const Playlist = ({ playlist }) => {
 	);
 }
 
-export default Playlist;
+const mapStateToProps = state => ({
+	videos: selectPlaylistVideosWithData(state)
+});
+
+export default connect(mapStateToProps)(Playlist);

@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { connectToSocket, setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
 import VideosSearch from '../../components/videos-search/videos-search.component';
-import PlaylistHeader from '../../components/playlist-header/playlist-header.component';
+import { connectToSocket } from '../../redux/socket/socket.actions';
 
 const Container = styled.div`
 	display: flex;
@@ -51,9 +51,8 @@ const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket }) => 
 			{
 				playlist &&
 				<VideoWithPlaylist>
-					<YoutubeVideo videoId={playlist.videos[0] ? playlist.videos[0].id : null} />
+					<YoutubeVideo videoId={playlist.videos.orderedIds[0]} />
 					<PlaylistWithSearch>
-						<PlaylistHeader playlist={playlist} />
 						<Playlist playlist={playlist} />
 						<VideosSearch />
 					</PlaylistWithSearch>

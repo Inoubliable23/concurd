@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { selectAllPlaylists } from '../../redux/playlist/playlist.selectors';
 import Playlistcard from '../../components/playlist-card/playlist-card.component';
+import TopVideosTable from '../../components/top-videos-table/top-videos-table';
 
 const Container = styled.div`
 	padding: 10px;
@@ -25,10 +26,6 @@ const TopVideosContainer = styled.div`
 	margin-top: 50px;
 `
 
-const TopVideosTable = styled.div`
-	margin-top: 50px;
-`
-
 const HomePage = ({ playlists }) => {
 	return (
 		<Container>
@@ -42,9 +39,7 @@ const HomePage = ({ playlists }) => {
 			</PlaylistsContainer>
 			<TopVideosContainer>
 				<Title>Top Videos</Title>
-				<TopVideosTable>
-					
-				</TopVideosTable>
+				<TopVideosTable />
 			</TopVideosContainer>
 		</Container>
 	);

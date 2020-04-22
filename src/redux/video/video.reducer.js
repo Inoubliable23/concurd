@@ -13,10 +13,10 @@ const initialState = {
 			channelName: 'MOMOMOYOUTHVEVO'
 		},
 		'sZfZ8uWaOFI': {
-			id:'sZfZ8uWaOFI',
-			title:'Aerosmith - Dream On',
-			thumbnailUrl:'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
-			channelName:'AerosmithVEVO'
+			id: 'sZfZ8uWaOFI',
+			title: 'Aerosmith - Dream On',
+			thumbnailUrl: 'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
+			channelName: 'AerosmithVEVO'
 		},
 		'GbpnAGajyMc': {
 			id: 'GbpnAGajyMc',

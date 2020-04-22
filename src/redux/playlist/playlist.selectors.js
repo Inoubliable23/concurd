@@ -23,6 +23,11 @@ export const selectPlaylistVideosWithData = state => {
 	return videosWithData;
 };
 
+export const selectAllVideos = state => {
+	const videosObject = state.video.allVideos;
+	return Object.keys(videosObject).map(id => videosObject[id]);
+}
+
 export const selectLikesCount = (state, videoId) => {
 	const currentPlaylist = selectCurrentPlaylist(state);
 	const video = currentPlaylist.videos.byId[videoId];

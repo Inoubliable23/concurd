@@ -13,7 +13,7 @@ const PlaylistName = styled.div`
 
 const PlaylistSubtitle = styled.div`
 	font-size: 12px;
-	color: #aaa;
+	color: #9A9AAB;
 `
 
 const PlaylistHeader = ({ name, author }) => (

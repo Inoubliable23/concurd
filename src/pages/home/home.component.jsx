@@ -7,15 +7,15 @@ import TopVideosTable from '../../components/top-videos-table/top-videos-table';
 import { fetchTopPlaylists } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
-	padding: 10px;
+	padding: 20px 40px;
 `
 
 const PlaylistsContainer = styled.div`
-	margin-top: 50px;
+	margin-top: 90px;
 `
 
 const Title = styled.div`
-	font-size: 24px;
+	font-size: 22px;
 `
 
 const PlaylistCards = styled.div`

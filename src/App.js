@@ -4,16 +4,23 @@ import { GlobalStyle } from './global.styles';
 
 import HomePage from './pages/home/home.component';
 import WatchPage from './pages/watch/watch.component';
+import Sidebar from './components/sidebar/sidebar.component';
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+	display: flex;
+`
 
 const App = () => {
   return (
-    <div>
+    <AppContainer>
 			<GlobalStyle />
+			<Sidebar />
       <Switch>
 				<Route exact path='/' component={HomePage} />
 				<Route exact path='/playlist/:playlistId' component={WatchPage} />
 			</Switch>
-    </div>
+    </AppContainer>
   );
 }
 

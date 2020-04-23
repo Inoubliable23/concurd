@@ -11,7 +11,7 @@ const Table = styled.div`
 const TableHeader = styled.div`
 	display: grid;
 	grid-template-columns: 60px 60px 1fr 1fr 70px;
-	grid-gap: 10px;
+	grid-gap: 20px;
 	padding-bottom: 15px;
 	border-bottom: 1px solid #444;
 `
@@ -33,7 +33,7 @@ const LikesColumnHeader = styled.div`
 const TableRow = styled.div`
 	display: grid;
 	grid-template-columns: 60px 60px 1fr 1fr 70px;
-	grid-gap: 10px;
+	grid-gap: 20px;
 	align-items: center;
 	padding: 12px 0;
 	transition: background-color 0.3s ease-out;
@@ -57,12 +57,14 @@ const Title = styled.div``
 
 const ChannelName = styled.div`
 	font-size: 14px;
+	color: #9A9AAB;
 `
 
 const Likes = styled.div`
 	justify-self: center;
+	font-size: 14px;
+	color: #9A9AAB;
 `
-
 
 const TopVideosTable = ({ fetchTopVideos, videos }) => {
 

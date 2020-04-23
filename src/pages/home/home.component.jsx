@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { selectAllPlaylists } from '../../redux/playlist/playlist.selectors';
 import Playlistcard from '../../components/playlist-card/playlist-card.component';
 import TopVideosTable from '../../components/top-videos-table/top-videos-table';
+import { fetchTopPlaylists } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	padding: 10px;
@@ -26,7 +27,12 @@ const TopVideosContainer = styled.div`
 	margin-top: 50px;
 `
 
-const HomePage = ({ playlists }) => {
+const HomePage = ({ fetchTopPlaylists, playlists }) => {
+
+	useEffect(() => {
+		fetchTopPlaylists();
+	}, [fetchTopPlaylists]);
+
 	return (
 		<Container>
 			<PlaylistsContainer>
@@ -49,4 +55,8 @@ const mapStateToProps = state => ({
 	playlists: selectAllPlaylists(state)
 });
 
-export default connect(mapStateToProps)(HomePage);
+const mapDispatchToProps = {
+	fetchTopPlaylists
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

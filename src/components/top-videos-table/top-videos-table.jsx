@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { selectAllVideos } from '../../redux/playlist/playlist.selectors';
+import { selectAllVideos } from '../../redux/video/video.selector';
+import { fetchTopVideos } from '../../redux/video/video.actions';
 
 const Table = styled.div`
 	margin-top: 50px;
@@ -63,7 +64,12 @@ const Likes = styled.div`
 `
 
 
-const TopVideosTable = ({ videos }) => {
+const TopVideosTable = ({ fetchTopVideos, videos }) => {
+
+	useEffect(() => {
+		fetchTopVideos();
+	}, [fetchTopVideos]);
+
 	return (
 		<Table>
 			<TableHeader>
@@ -91,4 +97,8 @@ const mapStateToProps = state => ({
 	videos: selectAllVideos(state)
 });
 
-export default connect(mapStateToProps)(TopVideosTable);
+const mapDispatchToProps = {
+	fetchTopVideos
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopVideosTable);

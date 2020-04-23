@@ -1,60 +1,20 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS } from './playlist.types';
 import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	currentPlaylistId: null,
-	allPlaylists: {
-		'1': {
-			id: '1',
-			name: 'My Playlist',
-			image: 'chill.jpg',
-			author: 'Tim Janzelj',
-			videos: {
-				byId: {
-					'cWuvnc6u93A': {
-						id: 'cWuvnc6u93A',
-						addedBy: 'Tim Janzelj',
-						likedBy: {
-							'23': true
-						}
-					},
-					'sZfZ8uWaOFI': {
-						id:'sZfZ8uWaOFI',
-						addedBy:'Tim Janzelj',
-						likedBy: {}
-					},
-					'GbpnAGajyMc': {
-						id: 'GbpnAGajyMc',
-						addedBy: 'Tim Janzelj',
-						likedBy: {}
-					}
-				},
-				orderedIds: ['cWuvnc6u93A', 'sZfZ8uWaOFI', 'GbpnAGajyMc']
-			}
-		},
-		'2': {
-			id: '2',
-			name: 'nekineki',
-			image: 'night.jpg',
-			author: 'Tim Janzelj',
-			videos: {
-				byId: {
-					'sZfZ8uWaOFI': {
-						id:'sZfZ8uWaOFI',
-						addedBy:'Tim Janzelj',
-						likedBy: {}
-					}
-				},
-				orderedIds: ['sZfZ8uWaOFI']
-			}
-		}
-	}
+	allPlaylists: {}
 }
 
 export default (state = initialState, { type, payload }) => {
 	return produce(state, draft => {
 		switch (type) {
+
+			case FETCH_TOP_PLAYLISTS_SUCCESS: {
+				draft.allPlaylists = payload.playlists;
+				break;
+			}
 
 			case SET_CURRENT_PLAYLIST: {
 				draft.currentPlaylistId = payload.playlistId;

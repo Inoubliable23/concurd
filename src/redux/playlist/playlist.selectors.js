@@ -8,6 +8,20 @@ export const selectAllPlaylists = state => {
 	});
 };
 
+export const selectMyPlaylists = state => {
+	const playlistsObject = state.playlist.allPlaylists;
+	const currentUserName = state.user.currentUser.name;
+	return Object.keys(playlistsObject).reduce((filteredArray, id) => {
+		if (playlistsObject[id].author === currentUserName) {
+			filteredArray.push({
+				...playlistsObject[id],
+				id
+			});
+		}
+		return filteredArray;
+	}, []);
+};
+
 export const selectCurrentPlaylist = state => {
 	const currentPlaylistId = state.playlist.currentPlaylistId;
 	if (!currentPlaylistId) return;

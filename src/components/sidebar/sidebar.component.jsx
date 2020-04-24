@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ReactComponent as ThumbsUp } from '../../assets/icons/thumbs-up.svg';
+import { connect } from 'react-redux';
+import MenuItem from '../menu-item/menu-item.component';
+import { selectMyPlaylists } from '../../redux/playlist/playlist.selectors';
 
 const Container = styled.div`
 	height: 100vh;
@@ -21,58 +23,29 @@ const Logo = styled.div`
 const SectionTitle = styled.div`
 	margin-top: 50px;
 	margin-bottom: 20px;
-	padding-left: 50px;
+	padding-left: 45px;
 	font-size: 16px;
 `
 
-const MenuItem = styled.div`
-	display: flex;
-	align-items: center;
-	padding: 15px 50px;
-	margin-right: 30px;
-	font-size: 15px;
-	border-radius: 0 30px 30px 0;
-	color: #9A9AAB;
-	cursor: pointer;
-	transition: all 0.2s ease-out;
-
-	&:hover {
-		background-color: #F5A623;
-		color: #fff;
-	}
-`
-
-const PlayIcon = styled.div`
-	width: 22px;
-	height: 22px;
-	margin-right: 20px;
-`
-
-const Sidebar = () => {
+const Sidebar = ({ myPlaylists }) => {
 	return (
 		<Container>
 			<Logo>concurd</Logo>
-			<SectionTitle>Your Music</SectionTitle>
-			<MenuItem>
-				<PlayIcon>
-					<ThumbsUp />
-				</PlayIcon>
-				Playlists
-			</MenuItem>
-			<MenuItem>
-				<PlayIcon>
-					<ThumbsUp />
-				</PlayIcon>
-				Favourite
-			</MenuItem>
-			<MenuItem>
-				<PlayIcon>
-					<ThumbsUp />
-				</PlayIcon>
-				Download
-			</MenuItem>
+
+			<SectionTitle>Browse</SectionTitle>
+			<MenuItem text='Favourite' iconKey='heart' />
+			<MenuItem text='Play History' iconKey='history' />
+
+			<SectionTitle>Your Playlists</SectionTitle>
+			{
+				myPlaylists.map(playlist => <MenuItem key={playlist.id} text={playlist.name} iconKey='playlist' />)
+			}
 		</Container>
 	);
 }
 
-export default Sidebar;
+const mapStateToProps = state => ({
+	myPlaylists: selectMyPlaylists(state)
+});
+
+export default connect(mapStateToProps)(Sidebar);

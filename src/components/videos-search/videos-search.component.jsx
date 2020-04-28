@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { fetchSearchStart, clearSearchResults } from '../../redux/search/search.actions';
-import SearchDropdown from '../search-dropdown/search-dropdown.component';
 import { selectSearchResults } from '../../redux/search/search.selectors';
+import { addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import SearchResult from '../search-result/search-result.component';
 
 const Container = styled.div`
 	position: relative;
@@ -15,15 +16,17 @@ const SearchInput = styled.input`
 	color: #000;
 `
 
-const SearchDropdownContainer = styled.div`
+const SearchDropdown = styled.div`
 	position: absolute;
 	top: 40px;
 	z-index: 1;
 	left: 0;
 	width: 100%;
+	background-color: #fff;
+	color: #000;
 `
 
-const VideosSearch = ({ searchVideos, searchResults, clearSearchResults }) => {
+const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideoSelect }) => {
 
 	const handleInputChange = event => {
 		const queryString = event.target.value;
@@ -35,6 +38,11 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults }) => {
 		searchVideos(queryString);
 	}
 
+	const handleResultClick = video => {
+		clearSearchResults();
+		onVideoSelect(video);
+	}
+
 	return (
 		<Container>
 			<SearchInput
@@ -42,9 +50,17 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults }) => {
 				placeholder='Search for Youtube video and add it to the playlist'
 				onChange={handleInputChange}
 			/>
-			<SearchDropdownContainer>
-				<SearchDropdown searchResults={searchResults} />
-			</SearchDropdownContainer>
+			<SearchDropdown>
+				{
+					searchResults.map(result => (
+						<SearchResult
+							key={result.id}
+							video={result}
+							onClick={handleResultClick}
+						/>
+					))
+				}
+			</SearchDropdown>
 		</Container>
 	);
 }
@@ -55,7 +71,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	searchVideos: fetchSearchStart,
-	clearSearchResults
+	clearSearchResults,
+	addVideoToCurrentPlaylist
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideosSearch);

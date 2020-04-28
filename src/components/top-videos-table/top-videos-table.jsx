@@ -13,7 +13,7 @@ const TableHeader = styled.div`
 	grid-template-columns: 60px 60px 1fr 1fr 70px;
 	grid-gap: 20px;
 	padding-bottom: 15px;
-	border-bottom: 1px solid #444;
+	border-bottom: 1px solid #446;
 `
 
 const NumberColumnHeader = styled.div`

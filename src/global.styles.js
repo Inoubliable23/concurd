@@ -16,6 +16,7 @@ export const GlobalStyle = createGlobalStyle`
 	a {
 		text-decoration: none;
 		color: #fff;
+		display: block;
 	}
 
 	.youtube-container {

@@ -67,7 +67,7 @@ const VideosCount = styled.div`
 	margin-top: 10px;
 `
 
-const PlaylistCard = ({ id, name, author, image, videos }) => {
+const PlaylistCard = ({ id, name, author, imageUrl, videos }) => {
 
 	const videosCount = videos.orderedIds.length;
 	const videosCountText = videosCount === 1 ?
@@ -76,7 +76,7 @@ const PlaylistCard = ({ id, name, author, image, videos }) => {
 
 	return (
 		<Container to={`playlist/${id}`}>
-			<Image src={require(`../../assets/images/${image}`)} alt={image}/>
+			<Image src={imageUrl} />
 			<InfoContainer>
 				<Name>{name}</Name>
 				<CreatedBy>created by {author}</CreatedBy>

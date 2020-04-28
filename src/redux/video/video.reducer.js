@@ -5,7 +5,26 @@ import { VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/sock
 
 const initialState = {
 	isPlaying: false,
-	allVideos: {}
+	allVideos: {
+		'WUcXQ--yGWQ': {
+			id: 'WUcXQ--yGWQ',
+			title: 'MØ - Final Song (Official Video)',
+			thumbnailUrl: 'https://i.ytimg.com/vi/WUcXQ--yGWQ/default.jpg',
+			channelName: 'MOMOMOYOUTHVEVO'
+		},
+		'sZfZ8uWaOFI': {
+			id: 'sZfZ8uWaOFI',
+			title: 'Aerosmith - Dream On',
+			thumbnailUrl: 'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
+			channelName: 'AerosmithVEVO'
+		},
+		'GbpnAGajyMc': {
+			id: 'GbpnAGajyMc',
+			title: 'Come On Eileen',
+			thumbnailUrl: 'https://i.ytimg.com/vi/GbpnAGajyMc/default.jpg',
+			channelName: 'Dexy\'s Midnight Runners - Topic'
+		}
+	}
 }
 
 export default (state = initialState, { type, payload }) => {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { setCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { setCurrentPlaylist, addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
@@ -30,7 +30,7 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket }) => {
+const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket, addVideoToCurrentPlaylist }) => {
 
 	const playlistId = match.params.playlistId;
 	
@@ -46,6 +46,12 @@ const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket }) => 
 		});
 	}, [connectToSocket, playlistId]);
 
+	const handleVideoSelect = video => {
+		addVideoToCurrentPlaylist({
+			video
+		});
+	}
+
 	return (
 		<Container>
 			{
@@ -54,7 +60,7 @@ const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket }) => 
 					<YoutubeVideo videoId={playlist.videos.orderedIds[0]} />
 					<PlaylistWithSearch>
 						<Playlist playlist={playlist} />
-						<VideosSearch />
+						<VideosSearch onVideoSelect={handleVideoSelect} />
 					</PlaylistWithSearch>
 				</VideoWithPlaylist>
 			}
@@ -68,7 +74,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
 	setCurrentPlaylist,
-	connectToSocket
+	connectToSocket,
+	addVideoToCurrentPlaylist
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WatchPage);

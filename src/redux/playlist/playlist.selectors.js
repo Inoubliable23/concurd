@@ -22,11 +22,34 @@ export const selectMyPlaylists = state => {
 	}, []);
 };
 
+export const selectPlaylistById = (state, playlistId) => {
+	const playlist = state.playlist.allPlaylists[playlistId];
+	const videosArray = playlist.videos.orderedIds.map(videoId => {
+		return {
+			...playlist.videos.byId[videoId],
+			...state.video.allVideos[videoId]
+		}
+	});
+	return {
+		...playlist,
+		videos: videosArray
+	};
+};
+
 export const selectCurrentPlaylist = state => {
 	const currentPlaylistId = state.playlist.currentPlaylistId;
 	if (!currentPlaylistId) return;
 
 	return state.playlist.allPlaylists[currentPlaylistId];
+};
+
+export const selectPlaylistDraftVideosObject = state => state.playlist.playlistDraftVideos;
+
+export const selectPlaylistDraftVideos = state => {
+	const draftVideos = selectPlaylistDraftVideosObject(state);
+	return draftVideos.orderedIds.map(videoId => {
+		return draftVideos.byId[videoId];
+	});
 };
 
 export const selectPlaylistVideosWithData = state => {

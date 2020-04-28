@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { ReactComponent as HeartIcon } from '../../assets/icons/heart.svg';
 import { ReactComponent as HistoryIcon } from '../../assets/icons/history.svg';
 import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
 
-const Container = styled.div`
+const Container = styled(Link)`
 	display: flex;
 	align-items: center;
 	padding: 15px 45px;
@@ -33,9 +34,9 @@ const iconMap = {
 	'playlist': <PlaylistIcon />,
 }
 
-const MenuItem = ({ text, iconKey }) => {
+const MenuItem = ({ text, iconKey, linkUrl }) => {
 	return (
-		<Container>
+		<Container to={linkUrl ? linkUrl : '/'}>
 			<IconContainer>
 				{iconMap[iconKey]}
 			</IconContainer>

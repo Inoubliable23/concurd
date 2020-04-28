@@ -1,10 +1,14 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, CHANGE_PLAYLIST_DRAFT, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO } from './playlist.types';
 import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	currentPlaylistId: null,
-	allPlaylists: {}
+	allPlaylists: {},
+	playlistDraftVideos: {
+		byId: {},
+		orderedIds: []
+	}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -18,6 +22,37 @@ export default (state = initialState, { type, payload }) => {
 
 			case SET_CURRENT_PLAYLIST: {
 				draft.currentPlaylistId = payload.playlistId;
+				break;
+			}
+
+			case CHANGE_PLAYLIST_DRAFT: {
+				draft.playlistDraftVideos = payload.videos;
+				break;
+			}
+			case PLAYLIST_DRAFT_ADD_VIDEO: {
+				const { video } = payload;
+				draft.playlistDraftVideos.byId[video.id] = video;
+				draft.playlistDraftVideos.orderedIds.push(video.id);
+				break;
+			}
+			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
+				const { video } = payload;
+				const draftVideos = draft.playlistDraftVideos;
+				const index = draftVideos.orderedIds.indexOf(video.id);
+				
+				if (index > -1) {
+					draftVideos.orderedIds.splice(index, 1);
+				}
+				delete draftVideos.byId[video.id];
+				break;
+			}
+
+			case CREATE_PLAYLIST_SUCCESS: {
+				draft.allPlaylists[payload.playlist.id] = payload.playlist;
+				draft.playlistDraftVideos = {
+					byId: {},
+					orderedIds: []
+				};
 				break;
 			}
 

@@ -1,9 +1,10 @@
 import { takeEvery, takeLatest, call, all, put, select } from 'redux-saga/effects';
-import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST, CREATE_PLAYLIST_SUCCESS } from './playlist.types';
+import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, PLAYLIST_DRAFT_ADD_VIDEO } from './playlist.types';
 import { selectCurrentUserId } from '../user/user.selectors';
-import { firestore, convertSnapshotToMap, uploadPlaylistImage, addDocument } from '../../firebase/firebase.utils';
+import { firestore, convertSnapshotToMap, uploadPlaylistImage, addDocument, addCollectionAndDocuments } from '../../firebase/firebase.utils';
 import history from '../../history';
 import { selectPlaylistDraftVideosObject } from './playlist.selectors';
+import { selectDraftVideos } from '../video/video.selector';
 
 function* onAddVideo() {
 	yield takeEvery(ADD_VIDEO_TO_CURRENT_PLAYLIST, addVideo);
@@ -15,6 +16,10 @@ function* onToggleLike() {
 
 function* onCreatePlaylist() {
 	yield takeEvery(CREATE_PLAYLIST, createPlaylistAsync);
+}
+
+function* onPlaylistDraftVideoAdd() {
+	yield takeEvery(PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, playlistDraftVideoAddWithCurrentUser);
 }
 
 function* addVideo({ payload: { video } }) {
@@ -76,15 +81,18 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 		}
 
 		const currentUserId = yield select(selectCurrentUserId);
-		const videos = yield select(selectPlaylistDraftVideosObject);
+		const playlistVideos = yield select(selectPlaylistDraftVideosObject);
 		const newPlaylist = {
 			name,
 			description,
 			author: currentUserId,
 			imageUrl,
-			videos
+			videos: playlistVideos
 		};
+		const videos = yield select(selectDraftVideos);
+		
 		const docRef = yield addDocument('playlists', newPlaylist);
+		yield addCollectionAndDocuments('videos', videos);
 
 		yield put(createPlaylistSuccess({
 			playlist: {
@@ -98,11 +106,27 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 	}
 };
 
+const playlistDraftVideoAdd = payload => ({
+	type: PLAYLIST_DRAFT_ADD_VIDEO,
+	payload
+});
+
+function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
+	const currentUserId = yield select(selectCurrentUserId);
+	yield put(playlistDraftVideoAdd({
+		video: {
+			...video,
+			addedBy: currentUserId
+		}
+	}));
+}
+
 export function* playlistSagas() {
 	yield all([
 		call(onFetchPlaylistsStart),
 		call(onAddVideo),
 		call(onCreatePlaylist),
+		call(onPlaylistDraftVideoAdd),
 		call(onToggleLike)
 	]);
 }

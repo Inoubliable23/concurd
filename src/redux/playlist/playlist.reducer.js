@@ -5,9 +5,11 @@ import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCK
 const initialState = {
 	currentPlaylistId: null,
 	allPlaylists: {},
-	playlistDraftVideos: {
-		byId: {},
-		orderedIds: []
+	playlistDraft: {
+		videos: {
+			byId: {},
+			orderedIds: []
+		}
 	}
 }
 
@@ -26,18 +28,22 @@ export default (state = initialState, { type, payload }) => {
 			}
 
 			case CHANGE_PLAYLIST_DRAFT: {
-				draft.playlistDraftVideos = payload.videos;
+				draft.playlistDraft.videos = payload.videos;
 				break;
 			}
 			case PLAYLIST_DRAFT_ADD_VIDEO: {
 				const { video } = payload;
-				draft.playlistDraftVideos.byId[video.id] = video;
-				draft.playlistDraftVideos.orderedIds.push(video.id);
+				draft.playlistDraft.videos.byId[video.id] = {
+					id: video.id,
+					addedBy: video.addedBy,
+					likedBy: []
+				};
+				draft.playlistDraft.videos.orderedIds.push(video.id);
 				break;
 			}
 			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
 				const { video } = payload;
-				const draftVideos = draft.playlistDraftVideos;
+				const draftVideos = draft.playlistDraft.videos;
 				const index = draftVideos.orderedIds.indexOf(video.id);
 				
 				if (index > -1) {
@@ -49,7 +55,7 @@ export default (state = initialState, { type, payload }) => {
 
 			case CREATE_PLAYLIST_SUCCESS: {
 				draft.allPlaylists[payload.playlist.id] = payload.playlist;
-				draft.playlistDraftVideos = {
+				draft.playlistDraft.videos = {
 					byId: {},
 					orderedIds: []
 				};

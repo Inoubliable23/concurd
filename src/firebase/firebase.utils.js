@@ -22,10 +22,18 @@ export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	const collectionRef = firestore.collection(collectionKey);
 
 	const batch = firestore.batch();
-	objectsToAdd.forEach(obj => {
-		const newDocRef = obj.id ? collectionRef.doc(obj.id) : collectionRef.doc();
-		batch.set(newDocRef, obj);
-	});
+	if (Array.isArray(objectsToAdd)) {
+		objectsToAdd.forEach(obj => {
+			const newDocRef = obj.id ? collectionRef.doc(obj.id) : collectionRef.doc();
+			batch.set(newDocRef, obj);
+		});
+	} else {
+		Object.keys(objectsToAdd).forEach(key => {
+			const obj = objectsToAdd[key];
+			const newDocRef = obj.id ? collectionRef.doc(obj.id) : collectionRef.doc();
+			batch.set(newDocRef, obj);
+		});
+	}
 
 	return batch.commit();
 }

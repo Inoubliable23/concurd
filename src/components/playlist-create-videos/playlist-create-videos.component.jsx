@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { ReactComponent as RemoveIconFilled } from '../../assets/icons/delete.svg';
 import VideosSearch from '../videos-search/videos-search.component';
-import { playlistDraftAddVideo } from '../../redux/playlist/playlist.actions';
+import { playlistDraftAddVideoWithCurrentUser } from '../../redux/playlist/playlist.actions';
 import { selectPlaylistDraftVideos } from '../../redux/playlist/playlist.selectors';
 
 const Table = styled.div`
@@ -107,7 +107,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	playlistDraftAddVideo
+	playlistDraftAddVideo: playlistDraftAddVideoWithCurrentUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistCreateVideos);

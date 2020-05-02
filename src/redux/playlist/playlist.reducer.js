@@ -1,16 +1,11 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, CHANGE_PLAYLIST_DRAFT, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, EDIT_PLAYLIST_SUCCESS, CREATE_DRAFT, CREATING_START } from './playlist.types';
 import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	currentPlaylistId: null,
 	allPlaylists: {},
-	playlistDraft: {
-		videos: {
-			byId: {},
-			orderedIds: []
-		}
-	}
+	playlistDraftVideos: []
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -27,38 +22,38 @@ export default (state = initialState, { type, payload }) => {
 				break;
 			}
 
-			case CHANGE_PLAYLIST_DRAFT: {
-				draft.playlistDraft.videos = payload.videos;
+			case CREATING_START: {
+				draft.playlistDraftVideos = [];
+				break;
+			}
+			case CREATE_DRAFT: {
+				draft.playlistDraftVideos = payload.playlist.videos;
 				break;
 			}
 			case PLAYLIST_DRAFT_ADD_VIDEO: {
 				const { video } = payload;
-				draft.playlistDraft.videos.byId[video.id] = {
+				draft.playlistDraftVideos.push({
+					...video,
 					id: video.id,
 					addedBy: video.addedBy,
-					likedBy: []
-				};
-				draft.playlistDraft.videos.orderedIds.push(video.id);
+					likedBy: {}
+				});
 				break;
 			}
 			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
-				const { video } = payload;
-				const draftVideos = draft.playlistDraft.videos;
+				/* const { video } = payload;
+				const draftVideos = draft.playlistDraftVideos;
+
 				const index = draftVideos.orderedIds.indexOf(video.id);
-				
-				if (index > -1) {
-					draftVideos.orderedIds.splice(index, 1);
-				}
-				delete draftVideos.byId[video.id];
+				draftVideos.orderedIds.splice(index, 1);
+
+				delete draftVideos.byId[video.id]; */
 				break;
 			}
 
-			case CREATE_PLAYLIST_SUCCESS: {
+			case CREATE_PLAYLIST_SUCCESS:
+			case EDIT_PLAYLIST_SUCCESS: {
 				draft.allPlaylists[payload.playlist.id] = payload.playlist;
-				draft.playlistDraft.videos = {
-					byId: {},
-					orderedIds: []
-				};
 				break;
 			}
 
@@ -81,11 +76,10 @@ export default (state = initialState, { type, payload }) => {
 			case VIDEO_REMOVED_VIA_SOCKET: {
 				const { videoId } = payload;
 				const playlist = draft.allPlaylists[state.currentPlaylistId];
-				const index = playlist.videos.orderedIds.indexOf(videoId);
 				
-				if (index > -1) {
-					playlist.videos.orderedIds.splice(index, 1);
-				}
+				const index = playlist.videos.orderedIds.indexOf(videoId);
+				playlist.videos.orderedIds.splice(index, 1);
+
 				delete playlist.videos.byId[videoId];
 				break;
 			}

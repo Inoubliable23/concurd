@@ -1,11 +1,16 @@
-import { ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, SET_CURRENT_PLAYLIST, TOGGLE_LIKE_WITH_CURRENT_USER, FETCH_TOP_PLAYLISTS, CREATE_PLAYLIST, CHANGE_PLAYLIST_DRAFT, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, PLAYLIST_DRAFT_REMOVE_VIDEO } from './playlist.types';
+import { ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, SET_CURRENT_PLAYLIST, TOGGLE_LIKE_WITH_CURRENT_USER, FETCH_TOP_PLAYLISTS, CREATE_PLAYLIST, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, PLAYLIST_DRAFT_REMOVE_VIDEO, EDIT_PLAYLIST, EDITING_START, CREATING_START } from './playlist.types';
 
 export const fetchTopPlaylists = () => ({
 	type: FETCH_TOP_PLAYLISTS
 });
 
-export const changePlaylistDraft = () => ({
-	type: CHANGE_PLAYLIST_DRAFT
+export const editingStart = payload => ({
+	type: EDITING_START,
+	payload
+});
+
+export const creatingStart = () => ({
+	type: CREATING_START
 });
 
 export const playlistDraftAddVideoWithCurrentUser = payload => ({
@@ -20,6 +25,11 @@ export const playlistDraftRemoveVideo = payload => ({
 
 export const createPlaylist = payload => ({
 	type: CREATE_PLAYLIST,
+	payload
+});
+
+export const editPlaylist = payload => ({
+	type: EDIT_PLAYLIST,
 	payload
 });
 

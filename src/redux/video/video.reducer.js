@@ -1,31 +1,11 @@
 import produce from 'immer';
 import { VIDEO_SET_PLAY, VIDEO_SET_PAUSE, VIDEO_PAUSED_VIA_SOCKET, VIDEO_PLAYED_VIA_SOCKET, FETCH_TOP_VIDEOS_SUCCESS } from './video.types';
-import { ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, CREATE_PLAYLIST_SUCCESS } from '../playlist/playlist.types';
+import { ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, CREATE_PLAYLIST_SUCCESS, EDIT_PLAYLIST_SUCCESS } from '../playlist/playlist.types';
 import { VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	isPlaying: false,
-	allVideos: {
-		'WUcXQ--yGWQ': {
-			id: 'WUcXQ--yGWQ',
-			title: 'MØ - Final Song (Official Video)',
-			thumbnailUrl: 'https://i.ytimg.com/vi/WUcXQ--yGWQ/default.jpg',
-			channelName: 'MOMOMOYOUTHVEVO'
-		},
-		'sZfZ8uWaOFI': {
-			id: 'sZfZ8uWaOFI',
-			title: 'Aerosmith - Dream On',
-			thumbnailUrl: 'https://i.ytimg.com/vi/sZfZ8uWaOFI/default.jpg',
-			channelName: 'AerosmithVEVO'
-		},
-		'GbpnAGajyMc': {
-			id: 'GbpnAGajyMc',
-			title: 'Come On Eileen',
-			thumbnailUrl: 'https://i.ytimg.com/vi/GbpnAGajyMc/default.jpg',
-			channelName: 'Dexy\'s Midnight Runners - Topic'
-		}
-	},
-	playlistDraftVideos: {}
+	allVideos: {}
 }
 
 export default (state = initialState, { type, payload }) => {
@@ -68,28 +48,12 @@ export default (state = initialState, { type, payload }) => {
 				delete draft.allVideos[videoId];
 				break;
 			}
-
-			case PLAYLIST_DRAFT_ADD_VIDEO: {
-				const { video: { id, title, channelName, thumbnailUrl } } = payload;
-				draft.playlistDraftVideos[id] = {
-					id,
-					title,
-					channelName,
-					thumbnailUrl
-				};
-				break;
-			}
-			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
-				const { video } = payload;
-				const draftVideos = draft.playlistDraftVideos;
-				delete draftVideos.byId[video.id];
-				break;
-			}
-			case CREATE_PLAYLIST_SUCCESS: {
-				Object.keys(draft.playlistDraftVideos).forEach(key => {
-					draft.allVideos[key] = draft.playlistDraftVideos[key];
+			
+			case CREATE_PLAYLIST_SUCCESS:
+			case EDIT_PLAYLIST_SUCCESS: {
+				Object.keys(payload.videos).forEach(key => {
+					draft.allVideos[key] = payload.videos[key];
 				});
-				draft.playlistDraftVideos = {};
 				break;
 			}
 

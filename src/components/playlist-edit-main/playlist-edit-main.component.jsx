@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { ReactComponent as EditIcon } from '../../assets/icons/edit.svg';
 import CustomButton from '../custom-button/custom-button.component';
-import { createPlaylist } from '../../redux/playlist/playlist.actions';
-import { connect } from 'react-redux';
+import { editPlaylist } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	display: flex;
@@ -82,23 +82,27 @@ const FakeImageInput = styled.input`
 	display: none;
 `
 
-const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
+const PlaylistEditMain = ({ id, name, description, imageUrl, editPlaylist }) => {
 
 	const inputFile = useRef(null);
 
 	const [editMode, setEditMode] = useState(false);
-	const [imagePreview, setImagePreview] = useState(null);
+	const [imagePreview, setImagePreview] = useState(imageUrl);
 	const [playlistData, setPlaylistData] = useState({
 		image: null,
 		name,
 		description: description ? description : ''
 	});
 
-	const onButtonClick = () => {
+	const handleEditingClick = () => {
+		setEditMode(true);
+	}
+
+	const handleImageEditClick = () => {
 		inputFile.current.click();
 	};
 	
-	const onFileChange = event => {
+	const handleFileChange = event => {
 		event.stopPropagation();
 		event.preventDefault();
 
@@ -111,14 +115,14 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 		setImagePreview(URL.createObjectURL(imgFile));
 	}
 	
-	const onNameChange = event => {
+	const handleNameChange = event => {
 		setPlaylistData({
 			...playlistData,
 			name: event.target.value
 		});
 	}
 	
-	const onDescriptionChange = event => {
+	const handleDescriptionChange = event => {
 		setPlaylistData({
 			...playlistData,
 			description: event.target.value
@@ -128,7 +132,10 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 	const handleSubmit = event => {
 		event.preventDefault();
 
-		createPlaylist(playlistData);
+		editPlaylist({
+			id,
+			...playlistData
+		});
 
 		setEditMode(false);
 	}
@@ -140,14 +147,14 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 				<>
 					<ImageContainer>
 						<Image src={imagePreview} />
-						<ImageEditOverlay onClick={onButtonClick}>
+						<ImageEditOverlay onClick={handleImageEditClick}>
 							<EditIcon />
 						</ImageEditOverlay>
 						<FakeImageInput
 							type='file'
 							accept='image/*'
 							ref={inputFile}
-							onChange={onFileChange}
+							onChange={handleFileChange}
 						/>
 					</ImageContainer>
 					<MainInfoRightForm onSubmit={handleSubmit}>
@@ -156,13 +163,13 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 							placeholder='Playlist Name'
 							required
 							value={playlistData.name}
-							onChange={onNameChange}
+							onChange={handleNameChange}
 						/>
 						<Input
 							type='text'
 							placeholder='Description'
 							value={playlistData.description}
-							onChange={onDescriptionChange}
+							onChange={handleDescriptionChange}
 						/>
 						<CustomButton
 							type='submit'
@@ -179,7 +186,7 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 						<PlaylistNamePretext>PLAYLIST</PlaylistNamePretext>
 						<Name>{playlistData.name}</Name>
 						<Description>{playlistData.description}</Description>
-						<EditIconContainer onClick={() => setEditMode(true)}>
+						<EditIconContainer onClick={handleEditingClick}>
 							<EditIcon />
 						</EditIconContainer>
 					</MainInfoRight>
@@ -190,7 +197,7 @@ const PlaylistEditMain = ({ name, description, imageUrl, createPlaylist }) => {
 }
 
 const mapDispatchToProps = {
-	createPlaylist
+	editPlaylist
 };
 
 export default connect(null, mapDispatchToProps)(PlaylistEditMain);

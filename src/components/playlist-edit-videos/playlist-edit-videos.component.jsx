@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { ReactComponent as RemoveIconFilled } from '../../assets/icons/delete.svg';
 import VideosSearch from '../videos-search/videos-search.component';
+import { playlistDraftAddVideoWithCurrentUser } from '../../redux/playlist/playlist.actions';
+import { selectPlaylistDraftVideos } from '../../redux/playlist/playlist.selectors';
 
 const Table = styled.div`
 	margin-top: 50px;
@@ -63,10 +66,12 @@ const Remove = styled.div`
 	cursor: pointer;
 `
 
-const PlaylistEditVideos = ({ videos }) => {
+const PlaylistEditVideos = ({ videos, playlistDraftAddVideo }) => {
 
 	const handleVideoSelect = video => {
-		
+		playlistDraftAddVideo({
+			video
+		});
 	}
 
 	return (
@@ -78,7 +83,6 @@ const PlaylistEditVideos = ({ videos }) => {
 				<RemoveColumnHeader>Remove</RemoveColumnHeader>
 			</TableHeader>
 			{
-				videos ?
 				videos.map(video => (
 					<TableRow key={video.id}>
 						<Thumbnail src={video.thumbnailUrl} />
@@ -92,12 +96,18 @@ const PlaylistEditVideos = ({ videos }) => {
 						</Remove>
 					</TableRow>
 				))
-				:
-				null
 			}
 			<VideosSearch onVideoSelect={handleVideoSelect} />
 		</Table>
 	);
 }
 
-export default PlaylistEditVideos;
+const mapStateToProps = state => ({
+	videos: selectPlaylistDraftVideos(state)
+});
+
+const mapDispatchToProps = {
+	playlistDraftAddVideo: playlistDraftAddVideoWithCurrentUser
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlaylistEditVideos);

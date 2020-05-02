@@ -8,6 +8,7 @@ import { selectPlaylistById } from '../../redux/playlist/playlist.selectors';
 import { editingStart } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
+	flex: 1;
 	padding: 20px;
 `
 

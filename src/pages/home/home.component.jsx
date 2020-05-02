@@ -8,6 +8,7 @@ import { fetchTopPlaylists } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	padding: 20px 40px;
+	flex: 1;
 `
 
 const PlaylistsContainer = styled.div`

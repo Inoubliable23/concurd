@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { ReactComponent as EditIcon } from '../../assets/icons/edit.svg';
+import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
 import CustomButton from '../custom-button/custom-button.component';
 import { editPlaylist } from '../../redux/playlist/playlist.actions';
 
@@ -22,12 +23,19 @@ const Image = styled.img`
 	object-fit: cover;
 `
 
+const ImagePlaceholder = styled.div`
+	height: 100%;
+	color: #9A9AAB;
+	padding-left: 20px;
+`
+
 const ImageEditOverlay = styled.div`
 	position: absolute;
 	top: 0;
 	padding: 60px;
 	background-color: rgba(0, 0, 0, 0.4);
 	opacity: 0;
+	z-index: 1;
 	cursor: pointer;
 	transition: opacity 0.2s;
 
@@ -146,7 +154,14 @@ const PlaylistEditMain = ({ id, name, description, imageUrl, editPlaylist }) => 
 				editMode ?
 				<>
 					<ImageContainer>
-						<Image src={imagePreview} />
+						{
+							imagePreview ?
+							<Image src={imagePreview} />
+							:
+							<ImagePlaceholder>
+								<PlaylistIcon />
+							</ImagePlaceholder>
+						}
 						<ImageEditOverlay onClick={handleImageEditClick}>
 							<EditIcon />
 						</ImageEditOverlay>
@@ -180,7 +195,14 @@ const PlaylistEditMain = ({ id, name, description, imageUrl, editPlaylist }) => 
 				:
 				<>
 					<ImageContainer>
-						<Image src={imagePreview} />
+						{
+							imagePreview ?
+							<Image src={imagePreview} />
+							:
+							<ImagePlaceholder>
+								<PlaylistIcon />
+							</ImagePlaceholder>
+						}
 					</ImageContainer>
 					<MainInfoRight>
 						<PlaylistNamePretext>PLAYLIST</PlaylistNamePretext>

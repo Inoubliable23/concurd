@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { selectAllVideos } from '../../redux/video/video.selector';
+import { selectTopVideos } from '../../redux/video/video.selector';
 import { fetchTopVideos } from '../../redux/video/video.actions';
 
 const Table = styled.div`
@@ -96,7 +96,7 @@ const TopVideosTable = ({ fetchTopVideos, videos }) => {
 }
 
 const mapStateToProps = state => ({
-	videos: selectAllVideos(state)
+	videos: selectTopVideos(state)
 });
 
 const mapDispatchToProps = {

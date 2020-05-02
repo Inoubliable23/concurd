@@ -2,6 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as PlayArrow } from '../../assets/icons/play-arrow.svg';
+import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
+
+const HoverOverlay = styled.div`
+	opacity: 0;
+	background-color: #AAA;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transition: all 0.5s ease-out;
+`
 
 const PlayButton = styled.div`
 	position: absolute;
@@ -17,6 +29,7 @@ const PlayButton = styled.div`
 `
 
 const Container = styled(Link)`
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	width: 225px;
@@ -31,18 +44,28 @@ const Container = styled(Link)`
 
 	&:hover {
 		box-shadow: 0px 7px 8px rgba(0, 0, 0, 0.2), 0px 5px 22px rgba(0, 0, 0, 0.12), 0px 12px 17px rgba(0, 0, 0, 0.14);
-		background-color: #242440;
+
+		${HoverOverlay} {
+			opacity: 0.06;
+		}
 
 		${PlayButton} {
 			opacity: 1;
 			top: -23px;
-		}	
+		}
 	}
 `
 
 const Image = styled.img`
 	object-fit: cover;
 	height: 65%;
+`
+
+const ImagePlaceholder = styled.div`
+	height: 65%;
+	color: #9A9AAB;
+	padding-left: 20px;
+	border-bottom: 1px solid #9A9AAB;
 `
 
 const InfoContainer = styled.div`
@@ -76,7 +99,14 @@ const PlaylistCard = ({ id, name, author, imageUrl, videos }) => {
 
 	return (
 		<Container to={`playlist/${id}`}>
-			<Image src={imageUrl} />
+			{
+				imageUrl ?
+				<Image src={imageUrl} />
+				:
+				<ImagePlaceholder>
+					<PlaylistIcon />
+				</ImagePlaceholder>
+			}
 			<InfoContainer>
 				<Name>{name}</Name>
 				<CreatedBy>created by {author}</CreatedBy>
@@ -85,6 +115,7 @@ const PlaylistCard = ({ id, name, author, imageUrl, videos }) => {
 					<PlayArrow />
 				</PlayButton>
 			</InfoContainer>
+			<HoverOverlay />
 		</Container>
 	);
 }

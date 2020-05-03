@@ -3,6 +3,7 @@ import YouTube from 'react-youtube';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { videoSetPlay, videoSetPause } from '../../redux/video/video.actions';
+import { ReactComponent as PlayArrow } from '../../assets/icons/play-arrow.svg';
 
 const Container = styled.div`
 	width: 100%;
@@ -17,7 +18,19 @@ const VideoCover = styled.div`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`
+
+const PlayButton = styled.div`
+	background-color: rgba(30, 30, 30, 0.8);
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	padding: 10px;
+	opacity: 1;
+	z-index: 1;
 `
 
 const Empty = styled.div`
@@ -91,7 +104,16 @@ const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 						containerClassName='youtube-container'
 						onReady={onReady}
 					/>
-					<VideoCover onClick={togglePlay} />
+					<VideoCover onClick={togglePlay}>
+						{
+							isPlaying ?
+							null
+							:
+							<PlayButton>
+								<PlayArrow />
+							</PlayButton>
+						}
+					</VideoCover>
 				</>
 				:
 				<Empty>

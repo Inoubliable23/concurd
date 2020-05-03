@@ -37,8 +37,12 @@ export const selectPlaylistById = (state, playlistId) => {
 	};
 };
 
+export const selectCurrentPlaylistId = state => {
+	return state.playlist.currentPlaylistId;
+};
+
 export const selectCurrentPlaylist = state => {
-	const currentPlaylistId = state.playlist.currentPlaylistId;
+	const currentPlaylistId = selectCurrentPlaylistId(state);
 	if (!currentPlaylistId) return;
 
 	return state.playlist.allPlaylists[currentPlaylistId];
@@ -62,7 +66,10 @@ export const selectLikesCount = (state, videoId) => {
 	const currentPlaylist = selectCurrentPlaylist(state);
 	const video = currentPlaylist.videos.byId[videoId];
 
-	return Object.keys(video.likedBy).length;
+	return Object.keys(video.likedBy).reduce((likesCount, id) => {
+		if (video.likedBy[id]) return likesCount + 1;
+		return likesCount;
+	}, 0);
 };
 
 export const selectIsVideoLikedByCurrentUser = (state, videoId) => {

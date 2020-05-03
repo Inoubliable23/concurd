@@ -91,7 +91,8 @@ const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, likesCount, is
 
 	const handleThumbsUpClick = () => {
 		toggleLike({
-			videoId: id
+			videoId: id,
+			like: !isLiked
 		});
 	}
 

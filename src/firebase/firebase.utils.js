@@ -15,8 +15,8 @@ const config = {
 
 firebase.initializeApp(config);
 
-export const firestore = firebase.firestore();
-export const storage = firebase.storage();
+const firestore = firebase.firestore();
+const storage = firebase.storage();
 
 export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	const collectionRef = firestore.collection(collectionKey);
@@ -45,11 +45,18 @@ export const addDocument = (collectionKey, objectToAdd) => {
 
 export const updateDocument = (collectionKey, objectToUpdate) => {
 	const collectionRef = firestore.collection(collectionKey);
-	const newDocRef = collectionRef.doc(objectToUpdate.id);
-	return newDocRef.set(objectToUpdate);
+	const docRef = collectionRef.doc(objectToUpdate.id);
+	return docRef.set(objectToUpdate);
 }
 
-export const convertSnapshotToMap = collectionSnapshot => {
+export const getCollectionMap = async collectionKey => {
+	const playlistRef = firestore.collection(collectionKey);
+	const snapshot = await playlistRef.get();
+	const playlistsMap = convertSnapshotToMap(snapshot);
+	return playlistsMap;
+}
+
+const convertSnapshotToMap = collectionSnapshot => {
 	const mappedCollection = {};
 	
 	collectionSnapshot.docs.forEach(doc => {
@@ -65,6 +72,34 @@ export const uploadPlaylistImage = async image => {
 	const storageRef = storage.ref(`playlist_images/${image.name}`);
 	const snapshot = await storageRef.put(image);
 	return snapshot.ref.getDownloadURL();
+}
+
+export const updateVideoLikes = (playlistId, videoId, userId, like) => {
+	return firestore.collection('playlists').doc(playlistId).update({
+		[`videos.byId.${videoId}.likedBy.${userId}`]: like
+	});
+}
+
+export const addVideoToPlaylist = (playlistId, video, userId) => {
+	const videoPlaylistObject = {
+		id: video.id,
+		addedBy: userId,
+		likedBy: {}
+	};
+
+	firestore.collection('videos').doc(video.id).set(video);
+
+	return firestore.collection('playlists').doc(playlistId).update({
+		[`videos.byId.${video.id}`]: videoPlaylistObject,
+		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayUnion(video.id)
+	});
+}
+
+export const removeVideoFromPlaylist = (playlistId, videoId) => {
+	return firestore.collection('playlists').doc(playlistId).update({
+		[`videos.byId.${videoId}`]: firebase.firestore.FieldValue.delete(),
+		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayRemove(videoId)
+	});
 }
 
 export default firebase;

@@ -30,7 +30,7 @@ function* fetchSearchAsync({ payload: { queryString } }) {
 		});
 		const searchResults = response.data.items;
 		const searchResultsMapped = searchResults.map(searchResult => {
-			const parsedTitle = searchResult.snippet.title.replace(/&#39;/g, '\'');
+			const parsedTitle = searchResult.snippet.title.replace(/&#39;/g, '\'').replace(/&quot;/g, '"');
 			return {
 				id: searchResult.id.videoId,
 				title: parsedTitle,

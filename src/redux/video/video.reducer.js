@@ -44,8 +44,6 @@ export default (state = initialState, { type, payload }) => {
 
 			case REMOVE_VIDEO_FROM_CURRENT_PLAYLIST:
 			case VIDEO_REMOVED_VIA_SOCKET: {
-				const { videoId } = payload;
-				delete draft.allVideos[videoId];
 				break;
 			}
 			

@@ -1,5 +1,5 @@
 import { takeLatest, call, all, put } from 'redux-saga/effects';
-import { firestore, convertSnapshotToMap } from '../../firebase/firebase.utils';
+import { getCollectionMap } from '../../firebase/firebase.utils';
 import { FETCH_TOP_VIDEOS, FETCH_TOP_VIDEOS_SUCCESS } from './video.types';
 
 function* onFetchVideosStart() {
@@ -15,9 +15,7 @@ const fetchVideosSuccess = videosMap => ({
 
 function* fetchVideosAsync() {
 	try {
-		const videoRef = firestore.collection('videos');
-		const snapshot = yield videoRef.get();
-		const videosMap = yield convertSnapshotToMap(snapshot);
+		const videosMap = yield getCollectionMap('videos');
 		yield put(fetchVideosSuccess(videosMap));
 	} catch (error) {
 		console.log(error);

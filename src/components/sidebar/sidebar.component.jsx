@@ -34,14 +34,14 @@ const Sidebar = ({ myPlaylists }) => {
 			<Logo to={'/'}>concurd</Logo>
 
 			<SectionTitle>Browse</SectionTitle>
-			<MenuItem text='Favourite' iconKey='heart' />
-			<MenuItem text='Play History' iconKey='history' />
+			<MenuItem label='Favourite' linkUrl={'/favourite'} iconKey='heart' />
+			<MenuItem label='Play History' linkUrl={'/history'} iconKey='history' />
 
 			<SectionTitle>Your Playlists</SectionTitle>
 			{
-				myPlaylists.map(playlist => <MenuItem key={playlist.id} text={playlist.name} linkUrl={`/edit/${playlist.id}`} iconKey='playlist' />)
+				myPlaylists.map(playlist => <MenuItem key={playlist.id} label={playlist.name} linkUrl={`/edit/${playlist.id}`} iconKey='playlist' />)
 			}
-			<MenuItem text={'Create Playlist'} linkUrl={'/create'} />
+			<MenuItem label={'New Playlist'} linkUrl={'/create'} iconKey='add' />
 		</Container>
 	);
 }

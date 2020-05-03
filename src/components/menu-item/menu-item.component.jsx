@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ReactComponent as HeartIcon } from '../../assets/icons/heart.svg';
 import { ReactComponent as HistoryIcon } from '../../assets/icons/history.svg';
 import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
+import { ReactComponent as AddIcon } from '../../assets/icons/add.svg';
 
-const Container = styled(Link)`
+const Container = styled(NavLink)`
 	display: flex;
 	align-items: center;
 	padding: 15px 45px;
@@ -14,9 +15,14 @@ const Container = styled(Link)`
 	border-radius: 0 30px 30px 0;
 	color: #9A9AAB;
 	cursor: pointer;
-	transition: all 0.2s ease-out;
+	transition: all 0.1s ease-out;
 
 	&:hover {
+		background-color: #F5A623;
+		color: #fff;
+	}
+
+	&.active {
 		background-color: #F5A623;
 		color: #fff;
 	}
@@ -32,15 +38,16 @@ const iconMap = {
 	'heart': <HeartIcon />,
 	'history': <HistoryIcon />,
 	'playlist': <PlaylistIcon />,
+	'add': <AddIcon />,
 }
 
-const MenuItem = ({ text, iconKey, linkUrl }) => {
+const MenuItem = ({ label, iconKey, linkUrl }) => {
 	return (
-		<Container to={linkUrl ? linkUrl : '/'}>
+		<Container exact to={linkUrl ? linkUrl : '/'}>
 			<IconContainer>
 				{iconMap[iconKey]}
 			</IconContainer>
-			{text}
+			{label}
 		</Container>
 	);
 }

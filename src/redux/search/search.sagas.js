@@ -33,9 +33,11 @@ function* fetchSearchAsync({ payload: { queryString } }) {
 			const parsedTitle = searchResult.snippet.title.replace(/&#39;/g, '\'').replace(/&quot;/g, '"');
 			return {
 				id: searchResult.id.videoId,
-				title: parsedTitle,
-				thumbnailUrl: searchResult.snippet.thumbnails.default.url,
-				channelName: searchResult.snippet.channelTitle
+				youtubeData: {
+					title: parsedTitle,
+					thumbnailUrl: searchResult.snippet.thumbnails.default.url,
+					channelName: searchResult.snippet.channelTitle
+				}
 			}
 		});
 

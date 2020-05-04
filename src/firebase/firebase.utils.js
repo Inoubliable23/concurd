@@ -18,6 +18,9 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const storage = firebase.storage();
 
+const increment = firebase.firestore.FieldValue.increment(1);
+const decrement = firebase.firestore.FieldValue.increment(-1);
+
 export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	const collectionRef = firestore.collection(collectionKey);
 
@@ -49,11 +52,18 @@ export const updateDocument = (collectionKey, objectToUpdate) => {
 	return docRef.set(objectToUpdate);
 }
 
+export const getTopVideos = async numberOfVideos => {
+	const videosRef = firestore.collection('videos');
+	const snapshot = await videosRef.orderBy('likesCount').limit(numberOfVideos).get();
+	const collectionMap = convertSnapshotToMap(snapshot);
+	return collectionMap;
+}
+
 export const getCollectionMap = async collectionKey => {
-	const playlistRef = firestore.collection(collectionKey);
-	const snapshot = await playlistRef.get();
-	const playlistsMap = convertSnapshotToMap(snapshot);
-	return playlistsMap;
+	const collectionRef = firestore.collection(collectionKey);
+	const snapshot = await collectionRef.get();
+	const collectionMap = convertSnapshotToMap(snapshot);
+	return collectionMap;
 }
 
 const convertSnapshotToMap = collectionSnapshot => {
@@ -75,9 +85,20 @@ export const uploadPlaylistImage = async image => {
 }
 
 export const updateVideoLikes = (playlistId, videoId, userId, like) => {
-	return firestore.collection('playlists').doc(playlistId).update({
+
+	const batch = firestore.batch();
+	
+	const videoDocRef = firestore.collection('videos').doc(videoId);
+	batch.update(videoDocRef, {
+		likesCount: like ? increment : decrement
+	});
+
+	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
+	batch.update(playlistDocRef, {
 		[`videos.byId.${videoId}.likedBy.${userId}`]: like
 	});
+
+	return batch.commit();
 }
 
 export const addVideoToPlaylist = (playlistId, video, userId) => {
@@ -87,12 +108,18 @@ export const addVideoToPlaylist = (playlistId, video, userId) => {
 		likedBy: {}
 	};
 
-	firestore.collection('videos').doc(video.id).set(video);
+	const batch = firestore.batch();
+	
+	const videoDocRef = firestore.collection('videos').doc(video.id);
+	batch.set(videoDocRef, video);
 
-	return firestore.collection('playlists').doc(playlistId).update({
+	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
+	batch.update(playlistDocRef, {
 		[`videos.byId.${video.id}`]: videoPlaylistObject,
 		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayUnion(video.id)
 	});
+
+	return batch.commit();
 }
 
 export const removeVideoFromPlaylist = (playlistId, videoId) => {

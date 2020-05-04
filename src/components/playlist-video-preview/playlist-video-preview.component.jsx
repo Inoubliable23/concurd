@@ -81,7 +81,7 @@ const RemoveIcon = styled.span`
 	cursor: pointer;
 `
 
-const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, likesCount, isLiked, removeVideoFromCurrentPlaylist, toggleLike }) => {
+const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, removeVideoFromCurrentPlaylist, toggleLike }) => {
 
 	const [fadeOut, setFadeOut] = useState(false);
 
@@ -102,6 +102,7 @@ const PlaylistVideoPreview = ({ id, thumbnailUrl, title, addedBy, likesCount, is
 		});
 	}
 
+	const { thumbnailUrl, title } = youtubeData;
 	return (
 		<Container fadeOut={fadeOut} onTransitionEnd={handleTransitionEnd}>
 			<LikesContainer>

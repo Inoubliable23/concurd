@@ -85,9 +85,9 @@ const PlaylistCreateVideos = ({ videos, playlistDraftAddVideo }) => {
 			{
 				videos.map(video => (
 					<TableRow key={video.id}>
-						<Thumbnail src={video.thumbnailUrl} />
-						<Title>{video.title}</Title>
-						<ChannelName>{video.channelName}</ChannelName>
+						<Thumbnail src={video.youtubeData.thumbnailUrl} />
+						<Title>{video.youtubeData.title}</Title>
+						<ChannelName>{video.youtubeData.channelName}</ChannelName>
 						<Date>5.4.2020</Date>
 						<Remove>
 							<IconContainer>

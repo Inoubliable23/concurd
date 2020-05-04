@@ -84,10 +84,10 @@ const TopVideosTable = ({ fetchTopVideos, videos }) => {
 				videos.map((video, index) => (
 					<TableRow key={video.id}>
 						<Number>{index + 1}</Number>
-						<Thumbnail src={video.thumbnailUrl} />
-						<Title>{video.title}</Title>
-						<ChannelName>{video.channelName}</ChannelName>
-						<Likes>{4}</Likes>
+						<Thumbnail src={video.youtubeData.thumbnailUrl} />
+						<Title>{video.youtubeData.title}</Title>
+						<ChannelName>{video.youtubeData.channelName}</ChannelName>
+						<Likes>{video.likesCount}</Likes>
 					</TableRow>
 				))
 			}

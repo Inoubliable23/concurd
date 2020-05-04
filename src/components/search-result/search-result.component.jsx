@@ -42,12 +42,13 @@ const SearchResult = ({ video, onClick }) => {
 		onClick(video);
 	}
 
+	const { youtubeData: { thumbnailUrl, title, channelName } } = video;
 	return (
 		<Container onClick={handleClick}>
-			<Thumbnail src={video.thumbnailUrl} />
+			<Thumbnail src={thumbnailUrl} />
 			<InfoContainer>
-				<Title><>{video.title}</></Title>
-				<ChannelName>{video.channelName}</ChannelName>
+				<Title><>{title}</></Title>
+				<ChannelName>{channelName}</ChannelName>
 			</InfoContainer>
 		</Container>
 	)

@@ -21,6 +21,39 @@ const storage = firebase.storage();
 const increment = firebase.firestore.FieldValue.increment(1);
 const decrement = firebase.firestore.FieldValue.increment(-1);
 
+const convertSnapshotToMap = collectionSnapshot => {
+	const mappedCollection = {};
+	
+	collectionSnapshot.docs.forEach(doc => {
+		const document = doc.data();
+
+		mappedCollection[doc.id] = document;
+	});
+
+	return mappedCollection;
+}
+
+const convertSnapshotToArray = snapshot => {
+	const dataArray = [];
+	
+	snapshot.docs.forEach(doc => {
+		const document = doc.data();
+
+		dataArray.push(document);
+	});
+
+	return dataArray;
+}
+
+const getDocumentsArrayByIds = async (collectionKey, ids) => {
+	const collectionRef = firestore.collection(collectionKey);
+	const promises = ids.map(id => {
+		return collectionRef.doc(id).get().then(snapshot => snapshot.data());
+	});
+	const dataArray = await Promise.all(promises);
+	return dataArray;
+}
+
 export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	const collectionRef = firestore.collection(collectionKey);
 
@@ -41,9 +74,15 @@ export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	return batch.commit();
 }
 
-export const addDocument = (collectionKey, objectToAdd) => {
-	const collectionRef = firestore.collection(collectionKey);
-	return collectionRef.add(objectToAdd);
+export const addDocument = async (collectionKey, objectToAdd) => {
+	const docRef = firestore.collection(collectionKey).doc();
+	const doc = {
+		...objectToAdd,
+		id: docRef.id
+	}
+	await docRef.set(doc);
+	
+	return doc;
 }
 
 export const updateDocument = (collectionKey, objectToUpdate) => {
@@ -52,11 +91,21 @@ export const updateDocument = (collectionKey, objectToUpdate) => {
 	return docRef.set(objectToUpdate);
 }
 
+export const getPlaylist = async playlistId => {
+	const playlistRef = firestore.collection('playlists').doc(playlistId);
+	const snapshot = await playlistRef.get();
+	return snapshot.data();
+}
+
+export const getVideosByIds = async ids => {
+	return getDocumentsArrayByIds('videos', ids);
+}
+
 export const getTopVideos = async numberOfVideos => {
 	const videosRef = firestore.collection('videos');
-	const snapshot = await videosRef.orderBy('likesCount').limit(numberOfVideos).get();
-	const collectionMap = convertSnapshotToMap(snapshot);
-	return collectionMap;
+	const snapshot = await videosRef.orderBy('likesCount', 'desc').limit(numberOfVideos).get();
+	const videosArray = convertSnapshotToArray(snapshot);
+	return videosArray;
 }
 
 export const getCollectionMap = async collectionKey => {
@@ -64,18 +113,6 @@ export const getCollectionMap = async collectionKey => {
 	const snapshot = await collectionRef.get();
 	const collectionMap = convertSnapshotToMap(snapshot);
 	return collectionMap;
-}
-
-const convertSnapshotToMap = collectionSnapshot => {
-	const mappedCollection = {};
-	
-	collectionSnapshot.docs.forEach(doc => {
-		const document = doc.data();
-
-		mappedCollection[doc.id] = document;
-	});
-
-	return mappedCollection;
 }
 
 export const uploadPlaylistImage = async image => {

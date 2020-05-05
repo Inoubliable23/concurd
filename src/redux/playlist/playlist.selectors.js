@@ -1,10 +1,7 @@
 export const selectAllPlaylists = state => {
 	const playlistsObject = state.playlist.allPlaylists;
 	return Object.keys(playlistsObject).map(id => {
-		return {
-			...playlistsObject[id],
-			id
-		}
+		return playlistsObject[id];
 	});
 };
 
@@ -13,10 +10,7 @@ export const selectMyPlaylists = state => {
 	const currentUserName = state.user.currentUser.name;
 	return Object.keys(playlistsObject).reduce((filteredArray, id) => {
 		if (playlistsObject[id].author === currentUserName) {
-			filteredArray.push({
-				...playlistsObject[id],
-				id
-			});
+			filteredArray.push(playlistsObject[id]);
 		}
 		return filteredArray;
 	}, []);
@@ -31,7 +25,6 @@ export const selectPlaylistById = (state, playlistId) => {
 		}
 	});
 	return {
-		id: playlistId,
 		...playlist,
 		videos: videosArray
 	};

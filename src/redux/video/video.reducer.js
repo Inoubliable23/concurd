@@ -1,19 +1,31 @@
 import produce from 'immer';
-import { VIDEO_SET_PLAY, VIDEO_SET_PAUSE, VIDEO_PAUSED_VIA_SOCKET, VIDEO_PLAYED_VIA_SOCKET, FETCH_TOP_VIDEOS_SUCCESS } from './video.types';
+import { VIDEO_SET_PLAY, VIDEO_SET_PAUSE, VIDEO_PAUSED_VIA_SOCKET, VIDEO_PLAYED_VIA_SOCKET, FETCH_TOP_VIDEOS_SUCCESS, FETCH_VIDEOS_SUCCESS } from './video.types';
 import { ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, CREATE_PLAYLIST_SUCCESS, EDIT_PLAYLIST_SUCCESS } from '../playlist/playlist.types';
 import { VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	isPlaying: false,
-	allVideos: {}
+	allVideos: {},
+	topVideosIds: []
 }
 
 export default (state = initialState, { type, payload }) => {
 	return produce(state, draft => {
 		switch (type) {
 
+			case FETCH_VIDEOS_SUCCESS: {
+				payload.videosArray.forEach(video => {
+					draft.allVideos[video.id] = video;
+				});
+				break;
+			}
+
 			case FETCH_TOP_VIDEOS_SUCCESS: {
-				draft.allVideos = payload.videos;
+				draft.topVideosIds = [];
+				payload.videosArray.forEach(video => {
+					draft.allVideos[video.id] = video;
+					draft.topVideosIds.push(video.id);
+				});
 				break;
 			}
 

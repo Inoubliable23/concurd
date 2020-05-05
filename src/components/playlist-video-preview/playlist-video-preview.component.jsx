@@ -102,7 +102,6 @@ const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, r
 		});
 	}
 
-	const { thumbnailUrl, title } = youtubeData;
 	return (
 		<Container fadeOut={fadeOut} onTransitionEnd={handleTransitionEnd}>
 			<LikesContainer>
@@ -116,9 +115,19 @@ const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, r
 				</ThumbsUpContainer>
 				<LikesCount>{likesCount}</LikesCount>
 			</LikesContainer>
-			<Thumbnail src={thumbnailUrl} />
+			{
+				youtubeData ?
+				<Thumbnail src={youtubeData.thumbnailUrl} />
+				:
+				null
+			}
 			<InfoContainer>
-				<Title>{title}</Title>
+				{
+					youtubeData ?
+					<Title>{youtubeData.title}</Title>
+					:
+					null
+				}
 				<AddedBy>added by <AddedByName>{addedBy}</AddedByName></AddedBy>
 			</InfoContainer>
 			<RemoveIcon onClick={handleRemoveClick}>&#10006;</RemoveIcon>

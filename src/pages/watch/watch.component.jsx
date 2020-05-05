@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { setCurrentPlaylist, addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import { fetchPlaylist, setCurrentPlaylist, addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
@@ -31,9 +31,15 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ match, playlist, setCurrentPlaylist, connectToSocket, addVideoToCurrentPlaylist }) => {
+const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connectToSocket, addVideoToCurrentPlaylist }) => {
 
 	const playlistId = match.params.playlistId;
+	
+	useEffect(() => {
+		fetchPlaylist({
+			playlistId: playlistId
+		});
+	}, [fetchPlaylist, playlistId]);
 	
 	useEffect(() => {
 		setCurrentPlaylist({
@@ -74,6 +80,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+	fetchPlaylist,
 	setCurrentPlaylist,
 	connectToSocket,
 	addVideoToCurrentPlaylist

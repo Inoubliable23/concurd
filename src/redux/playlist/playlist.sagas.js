@@ -152,7 +152,6 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 		playlistVideos.forEach(video => {
 			videosStaticData[video.id] = {
 				id: video.id,
-				likesCount: 0,
 				youtubeData: video.youtubeData
 			};
 			videosPlaylistData.byId[video.id] = {
@@ -204,7 +203,6 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 		playlistVideos.forEach(video => {
 			videosStaticData[video.id] = {
 				id: video.id,
-				likesCount: 0,
 				youtubeData: video.youtubeData
 			};
 			videosPlaylistData.byId[video.id] = {

@@ -61,13 +61,13 @@ export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
 	if (Array.isArray(objectsToAdd)) {
 		objectsToAdd.forEach(obj => {
 			const newDocRef = obj.id ? collectionRef.doc(obj.id) : collectionRef.doc();
-			batch.set(newDocRef, obj);
+			batch.set(newDocRef, obj, {merge: true});
 		});
 	} else {
 		Object.keys(objectsToAdd).forEach(key => {
 			const obj = objectsToAdd[key];
 			const newDocRef = obj.id ? collectionRef.doc(obj.id) : collectionRef.doc();
-			batch.set(newDocRef, obj);
+			batch.set(newDocRef, obj, {merge: true});
 		});
 	}
 
@@ -80,7 +80,7 @@ export const addDocument = async (collectionKey, objectToAdd) => {
 		...objectToAdd,
 		id: docRef.id
 	}
-	await docRef.set(doc);
+	await docRef.set(doc, {merge: true});
 	
 	return doc;
 }
@@ -88,7 +88,7 @@ export const addDocument = async (collectionKey, objectToAdd) => {
 export const updateDocument = (collectionKey, objectToUpdate) => {
 	const collectionRef = firestore.collection(collectionKey);
 	const docRef = collectionRef.doc(objectToUpdate.id);
-	return docRef.set(objectToUpdate);
+	return docRef.set(objectToUpdate, {merge: true});
 }
 
 export const getPlaylist = async playlistId => {
@@ -148,7 +148,7 @@ export const addVideoToPlaylist = (playlistId, video, userId) => {
 	const batch = firestore.batch();
 	
 	const videoDocRef = firestore.collection('videos').doc(video.id);
-	batch.set(videoDocRef, video);
+	batch.set(videoDocRef, video, {merge: true});
 
 	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
 	batch.update(playlistDocRef, {

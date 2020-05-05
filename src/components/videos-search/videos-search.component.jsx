@@ -35,7 +35,9 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideo
 			return;
 		}
 
-		searchVideos(queryString);
+		searchVideos({
+			queryString
+		});
 	}
 
 	const handleResultClick = video => {

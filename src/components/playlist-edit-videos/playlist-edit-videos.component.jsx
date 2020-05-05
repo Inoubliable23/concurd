@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { ReactComponent as RemoveIconFilled } from '../../assets/icons/delete.svg';
 import VideosSearch from '../videos-search/videos-search.component';
-import { playlistDraftAddVideoWithCurrentUser } from '../../redux/playlist/playlist.actions';
+import { playlistDraftAddVideoWithCurrentUser, playlistDraftRemoveVideo } from '../../redux/playlist/playlist.actions';
 import { selectPlaylistDraftVideos } from '../../redux/playlist/playlist.selectors';
 
 const Table = styled.div`
@@ -66,11 +66,17 @@ const Remove = styled.div`
 	cursor: pointer;
 `
 
-const PlaylistEditVideos = ({ videos, playlistDraftAddVideo }) => {
+const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemoveVideo }) => {
 
 	const handleVideoSelect = video => {
 		playlistDraftAddVideo({
 			video
+		});
+	}
+
+	const handleRemoveClick = videoId => {
+		playlistDraftRemoveVideo({
+			videoId
 		});
 	}
 
@@ -89,7 +95,7 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo }) => {
 						<Title>{video.youtubeData.title}</Title>
 						<ChannelName>{video.youtubeData.channelName}</ChannelName>
 						<Date>5.4.2020</Date>
-						<Remove>
+						<Remove onClick={() => handleRemoveClick(video.id)}>
 							<IconContainer>
 								<RemoveIconFilled />
 							</IconContainer>
@@ -107,7 +113,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	playlistDraftAddVideo: playlistDraftAddVideoWithCurrentUser
+	playlistDraftAddVideo: playlistDraftAddVideoWithCurrentUser,
+	playlistDraftRemoveVideo
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistEditVideos);

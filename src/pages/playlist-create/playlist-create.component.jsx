@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PlaylistCreateMain from '../../components/playlist-create-main/playlist-create-main.component';
-import PlaylistCreateVideos from '../../components/playlist-create-videos/playlist-create-videos.component';
+import PlaylistEditVideos from '../../components/playlist-edit-videos/playlist-edit-videos.component';
 import { creatingStart } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const PlaylistCreate = ({ creatingStart }) => {
 	return (
 		<Container>
 			<PlaylistCreateMain />
-			<PlaylistCreateVideos />
+			<PlaylistEditVideos />
 		</Container>
 	);
 }

@@ -47,13 +47,8 @@ export default (state = initialState, { type, payload }) => {
 				break;
 			}
 			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
-				/* const { video } = payload;
-				const draftVideos = draft.playlistDraftVideos;
-
-				const index = draftVideos.orderedIds.indexOf(video.id);
-				draftVideos.orderedIds.splice(index, 1);
-
-				delete draftVideos.byId[video.id]; */
+				const { videoId } = payload;
+				draft.playlistDraftVideos = draft.playlistDraftVideos.filter(video => video.id !== videoId);
 				break;
 			}
 

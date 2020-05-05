@@ -25,7 +25,7 @@ const SearchDropdown = styled.div`
 	color: #000;
 `
 
-const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideoSelect }) => {
+const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideoSelect, blacklist }) => {
 
 	const handleInputChange = event => {
 		const queryString = event.target.value;
@@ -57,6 +57,7 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideo
 						<SearchResult
 							key={result.id}
 							video={result}
+							alreadyAdded={blacklist.indexOf(result.id) !== -1}
 							onClick={handleResultClick}
 						/>
 					))

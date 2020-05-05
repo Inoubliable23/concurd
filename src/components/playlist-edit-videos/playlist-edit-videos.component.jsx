@@ -108,7 +108,10 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemove
 					</TableRow>
 				))
 			}
-			<VideosSearch onVideoSelect={handleVideoSelect} />
+			<VideosSearch
+				blacklist={videos.map(video => video.id)}
+				onVideoSelect={handleVideoSelect}
+			/>
 		</Table>
 	);
 }

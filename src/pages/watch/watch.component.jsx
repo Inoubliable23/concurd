@@ -67,7 +67,10 @@ const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connect
 					<YoutubeVideo videoId={playlist.videos.orderedIds[0]} />
 					<PlaylistWithSearch>
 						<Playlist playlist={playlist} />
-						<VideosSearch onVideoSelect={handleVideoSelect} />
+						<VideosSearch
+							blacklist={playlist.videos.orderedIds}
+							onVideoSelect={handleVideoSelect}
+						/>
 					</PlaylistWithSearch>
 				</VideoWithPlaylist>
 			}

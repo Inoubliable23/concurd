@@ -4,10 +4,11 @@ import styled from 'styled-components';
 const Container = styled.div`
 	display: flex;
 	padding: 8px 10px;
-	cursor: pointer;
+	background-color: ${props => props.disabled ? '#ccc' : '#fff'};
+	cursor: ${props => props.disabled ? 'auto' : 'pointer'};
 
 	&:hover {
-		background-color: #eee;
+		background-color: ${props => props.disabled ? '#ccc' : '#eee'};
 	}
 `
 
@@ -36,18 +37,20 @@ const ChannelName = styled.div`
 	color: #888;
 `
 
-const SearchResult = ({ video, onClick }) => {
+const SearchResult = ({ video, onClick, alreadyAdded }) => {
 
 	const handleClick = () => {
-		onClick(video);
+		if (!alreadyAdded) {
+			onClick(video);
+		}
 	}
 
 	const { youtubeData: { thumbnailUrl, title, channelName } } = video;
 	return (
-		<Container onClick={handleClick}>
+		<Container disabled={alreadyAdded} onClick={handleClick}>
 			<Thumbnail src={thumbnailUrl} />
 			<InfoContainer>
-				<Title><>{title}</></Title>
+				<Title>{title}</Title>
 				<ChannelName>{channelName}</ChannelName>
 			</InfoContainer>
 		</Container>

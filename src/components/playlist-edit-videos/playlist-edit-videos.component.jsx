@@ -1,6 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
+import dayjs from 'dayjs';
 import { ReactComponent as RemoveIconFilled } from '../../assets/icons/delete.svg';
 import VideosSearch from '../videos-search/videos-search.component';
 import { playlistDraftAddVideoWithCurrentUser, playlistDraftRemoveVideo } from '../../redux/playlist/playlist.actions';
@@ -10,10 +11,15 @@ const Table = styled.div`
 	margin-top: 50px;
 `
 
-const TableHeader = styled.div`
+const tableGrid = css`
 	display: grid;
-	grid-template-columns: 60px 1fr 1fr 100px 70px 70px;
+	grid-template-columns: 60px 1fr 1fr 100px 80px;
 	grid-gap: 20px;
+	padding: 0 10px;
+`
+
+const TableHeader = styled.div`
+	${tableGrid}
 	padding-bottom: 15px;
 	border-bottom: 1px solid #446;
 `
@@ -31,11 +37,10 @@ const RemoveColumnHeader = styled.div`
 `
 
 const TableRow = styled.div`
-	display: grid;
-	grid-template-columns: 60px 1fr 1fr 100px 70px 70px;
-	grid-gap: 20px;
+	${tableGrid}
 	align-items: center;
-	padding: 12px 0;
+	padding-top: 12px;
+	padding-bottom: 12px;
 `
 
 const Thumbnail = styled.img`
@@ -94,7 +99,7 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemove
 						<Thumbnail src={video.youtubeData.thumbnailUrl} />
 						<Title>{video.youtubeData.title}</Title>
 						<ChannelName>{video.youtubeData.channelName}</ChannelName>
-						<Date>5.4.2020</Date>
+						<Date>{dayjs(video.timestampAdded).format('DD.MM.YYYY')}</Date>
 						<Remove onClick={() => handleRemoveClick(video.id)}>
 							<IconContainer>
 								<RemoveIconFilled />

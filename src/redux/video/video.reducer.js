@@ -50,7 +50,10 @@ export default (state = initialState, { type, payload }) => {
 			case ADD_VIDEO:
 			case VIDEO_ADDED_VIA_SOCKET: {
 				const { video } = payload;
-				draft.allVideos[video.id] = video;
+				draft.allVideos[video.id] = {
+					id: video.id,
+					youtubeData: video.youtubeData
+				};
 				break;
 			}
 

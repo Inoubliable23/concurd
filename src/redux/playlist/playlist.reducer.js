@@ -42,6 +42,7 @@ export default (state = initialState, { type, payload }) => {
 					...video,
 					id: video.id,
 					addedBy: video.addedBy,
+					timestampAdded: video.timestampAdded,
 					likedBy: {}
 				});
 				break;
@@ -60,10 +61,11 @@ export default (state = initialState, { type, payload }) => {
 
 			case ADD_VIDEO:
 			case VIDEO_ADDED_VIA_SOCKET: {
-				const { video, userId } = payload;
+				const { video, userId, timestampAdded } = payload;
 				const playlistVideoObject = {
 					id: video.id,
 					addedBy: userId,
+					timestampAdded,
 					likedBy: {}
 				};
 				const playlistToUpdate = draft.allPlaylists[state.currentPlaylistId];

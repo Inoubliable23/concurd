@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { fetchSearchStart, clearSearchResults } from '../../redux/search/search.actions';
 import { selectSearchResults } from '../../redux/search/search.selectors';
-import { addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
 import SearchResult from '../search-result/search-result.component';
 
 const Container = styled.div`
@@ -73,8 +72,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	searchVideos: fetchSearchStart,
-	clearSearchResults,
-	addVideoToCurrentPlaylist
+	clearSearchResults
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideosSearch);

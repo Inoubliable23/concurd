@@ -93,18 +93,20 @@ function* addVideoToCurrentPlaylist({ payload: { video } }) {
 		type: ADD_VIDEO,
 		payload: {
 			playlistId: currentPlaylistId,
-			video,
-			userId: currentUserId
+			video: {
+				...video,
+				addedBy: currentUserId,
+				timestampAdded: Date.now()
+			}
 		}
 	});
 }
 
-function* addVideoDB({ payload: { playlistId, video, userId } }) {
+function* addVideoDB({ payload: { playlistId, video } }) {
 	const videoObject = {
-		...video,
-		addedBy: userId
+		...video
 	};
-	yield addVideoToPlaylist(playlistId, videoObject, userId);
+	yield addVideoToPlaylist(playlistId, videoObject);
 }
 
 function* removeVideoDB({ payload: { videoId } }) {
@@ -157,7 +159,8 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 			videosPlaylistData.byId[video.id] = {
 				id: video.id,
 				addedBy: video.addedBy,
-				likedBy: video.likedBy
+				likedBy: video.likedBy,
+				timestampAdded: video.timestampAdded
 			};
 		});
 		const newPlaylist = {
@@ -208,7 +211,8 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 			videosPlaylistData.byId[video.id] = {
 				id: video.id,
 				addedBy: video.addedBy,
-				likedBy: video.likedBy
+				likedBy: video.likedBy,
+				timestampAdded: video.timestampAdded
 			};
 		});
 		const editedPlaylist = {
@@ -244,7 +248,8 @@ function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
 	yield put(playlistDraftVideoAdd({
 		video: {
 			...video,
-			addedBy: currentUserId
+			addedBy: currentUserId,
+			timestampAdded: Date.now()
 		}
 	}));
 }

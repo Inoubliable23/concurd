@@ -138,10 +138,11 @@ export const updateVideoLikes = (playlistId, videoId, userId, like) => {
 	return batch.commit();
 }
 
-export const addVideoToPlaylist = (playlistId, video, userId) => {
+export const addVideoToPlaylist = (playlistId, video) => {
 	const videoPlaylistObject = {
 		id: video.id,
-		addedBy: userId,
+		addedBy: video.addedBy,
+		timestampAdded: video.timestampAdded,
 		likedBy: {}
 	};
 

@@ -53,7 +53,13 @@ const Thumbnail = styled.img`
   border-radius: 50%;
 `
 
-const Title = styled.div``
+const Title = styled.a`
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+`
 
 const ChannelName = styled.div`
 	font-size: 14px;
@@ -85,7 +91,12 @@ const TopVideosTable = ({ fetchTopVideos, videos }) => {
 					<TableRow key={video.id}>
 						<Number>{index + 1}</Number>
 						<Thumbnail src={video.youtubeData.thumbnailUrl} />
-						<Title>{video.youtubeData.title}</Title>
+						<Title
+							href={`https://www.youtube.com/watch?v=${video.id}`}
+							target='_blank'
+						>
+							{video.youtubeData.title}
+						</Title>
 						<ChannelName>{video.youtubeData.channelName}</ChannelName>
 						<Likes>{video.likesCount}</Likes>
 					</TableRow>

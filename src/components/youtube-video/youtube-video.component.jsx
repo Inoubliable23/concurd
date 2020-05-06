@@ -54,7 +54,7 @@ const opts = {
 
 let player;
 
-const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
+const YoutubeVideo = ({ videoId, onVideoEnd, videoSetPlay, videoSetPause, isPlaying }) => {
 
 	useEffect(() => {
 		player = null;
@@ -63,7 +63,7 @@ const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 		return () => {
 			videoSetPause();
 		}
-	}, [videoSetPlay, videoSetPause, videoId]);
+	}, [videoSetPlay, videoSetPause]);
 
 	useEffect(() => {
 		if (player) {
@@ -71,8 +71,12 @@ const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 		}
 	}, [isPlaying]);
 
-	const onReady = event => {
+	const handleVideoReady = event => {
 		player = event.target;
+	}
+
+	const handleVideoEnd = event => {
+		onVideoEnd();
 	}
 	
 	const togglePlay = () => {
@@ -102,7 +106,8 @@ const YoutubeVideo = ({ videoId, videoSetPlay, videoSetPause, isPlaying }) => {
 						videoId={videoId}
 						opts={opts}
 						containerClassName='youtube-container'
-						onReady={onReady}
+						onReady={handleVideoReady}
+						onEnd={handleVideoEnd}
 					/>
 					<VideoCover onClick={togglePlay}>
 						{

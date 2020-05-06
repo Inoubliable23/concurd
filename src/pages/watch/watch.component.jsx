@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { selectCurrentPlaylist } from '../../redux/playlist/playlist.selectors';
-import { fetchPlaylist, setCurrentPlaylist, addVideoToCurrentPlaylist } from '../../redux/playlist/playlist.actions';
+import usePrevious from '../../hooks/usePrevious.hook';
+
+import { selectCurrentPlaylist, selectCurrentVideoId } from '../../redux/playlist/playlist.selectors';
+import { fetchPlaylist, setCurrentPlaylist, addVideoToCurrentPlaylist, setCurrentVideo } from '../../redux/playlist/playlist.actions';
 
 import YoutubeVideo from '../../components/youtube-video/youtube-video.component';
 import Playlist from '../../components/playlist/playlist.component';
@@ -31,7 +33,7 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connectToSocket, addVideoToCurrentPlaylist }) => {
+const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentPlaylist, setCurrentVideo, connectToSocket, addVideoToCurrentPlaylist }) => {
 
 	const playlistId = match.params.playlistId;
 	
@@ -47,6 +49,16 @@ const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connect
 		});
 	}, [setCurrentPlaylist, playlistId]);
 	
+	const prevPlaylist = usePrevious(playlist);
+	useEffect(() => {
+		// checking if playlist prop has changed
+		if (playlist && (!prevPlaylist || (prevPlaylist && playlist.id !== prevPlaylist.id))) {
+			setCurrentVideo({
+				videoId: playlist.videos.orderedIds[0]
+			});
+		}
+	}, [setCurrentVideo, playlist, prevPlaylist]);
+	
 	useEffect(() => {
 		connectToSocket({
 			playlistId
@@ -59,12 +71,30 @@ const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connect
 		});
 	}
 
+	const handleVideoEnd = () => {
+		const orderedVideoIds = playlist.videos.orderedIds;
+		const currentVideoIndex = orderedVideoIds.indexOf(currentVideoId);
+		const nextVideoIndex = currentVideoIndex + 1;
+		if (nextVideoIndex >= orderedVideoIds.length) {
+			setCurrentVideo({
+				videoId: null
+			});
+		};
+
+		setCurrentVideo({
+			videoId: orderedVideoIds[nextVideoIndex]
+		});
+	}
+
 	return (
 		<Container>
 			{
 				playlist &&
 				<VideoWithPlaylist>
-					<YoutubeVideo videoId={playlist.videos.orderedIds[0]} />
+					<YoutubeVideo
+						videoId={currentVideoId}
+						onVideoEnd={handleVideoEnd}
+					/>
 					<PlaylistWithSearch>
 						<Playlist playlist={playlist} />
 						<VideosSearch
@@ -79,12 +109,14 @@ const WatchPage = ({ match, playlist, fetchPlaylist, setCurrentPlaylist, connect
 }
 
 const mapStateToProps = (state) => ({
-	playlist: selectCurrentPlaylist(state)
+	playlist: selectCurrentPlaylist(state),
+	currentVideoId: selectCurrentVideoId(state)
 });
 
 const mapDispatchToProps = {
 	fetchPlaylist,
 	setCurrentPlaylist,
+	setCurrentVideo,
 	connectToSocket,
 	addVideoToCurrentPlaylist
 };

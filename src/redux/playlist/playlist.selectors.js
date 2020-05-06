@@ -30,9 +30,7 @@ export const selectPlaylistById = (state, playlistId) => {
 	};
 };
 
-export const selectCurrentPlaylistId = state => {
-	return state.playlist.currentPlaylistId;
-};
+export const selectCurrentPlaylistId = state => state.playlist.currentPlaylistId;
 
 export const selectCurrentPlaylist = state => {
 	const currentPlaylistId = selectCurrentPlaylistId(state);
@@ -40,6 +38,8 @@ export const selectCurrentPlaylist = state => {
 
 	return state.playlist.allPlaylists[currentPlaylistId];
 };
+
+export const selectCurrentVideoId = state => state.playlist.currentVideoId;
 
 export const selectPlaylistDraftVideos = state => state.playlist.playlistDraftVideos;
 

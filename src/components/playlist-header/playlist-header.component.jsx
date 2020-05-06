@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
 	padding: 12px 15px;
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.7);
 `
 
 const PlaylistName = styled.div`

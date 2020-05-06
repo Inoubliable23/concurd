@@ -51,7 +51,7 @@ const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentP
 	
 	const prevPlaylist = usePrevious(playlist);
 	useEffect(() => {
-		// checking if playlist prop has changed
+		// checking if playlist id has changed
 		if (playlist && (!prevPlaylist || (prevPlaylist && playlist.id !== prevPlaylist.id))) {
 			setCurrentVideo({
 				videoId: playlist.videos.orderedIds[0]
@@ -96,7 +96,10 @@ const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentP
 						onVideoEnd={handleVideoEnd}
 					/>
 					<PlaylistWithSearch>
-						<Playlist playlist={playlist} />
+						<Playlist
+							playlist={playlist}
+							currentVideoId={currentVideoId}
+						/>
 						<VideosSearch
 							blacklist={playlist.videos.orderedIds}
 							onVideoSelect={handleVideoSelect}

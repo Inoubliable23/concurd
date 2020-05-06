@@ -21,7 +21,7 @@ const Container = styled.div`
 	}
 `
 
-const Playlist = ({ playlist, videos }) => {
+const Playlist = ({ playlist, videos, currentVideoId }) => {
 	return (
 		<Container>
 			<PlaylistHeader name={playlist.name} author={playlist.author} />
@@ -30,6 +30,7 @@ const Playlist = ({ playlist, videos }) => {
 					<PlaylistVideoPreview
 						key={video.id}
 						{...video}
+						isPlaying={video.id === currentVideoId}
 					/>
 				))
 			}

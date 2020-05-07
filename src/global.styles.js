@@ -19,6 +19,10 @@ export const GlobalStyle = createGlobalStyle`
 		display: block;
 	}
 
+	input {
+		border-style: none;
+	}
+
 	.youtube-container {
 		height: 100%;
 

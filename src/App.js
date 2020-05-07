@@ -9,9 +9,15 @@ import Sidebar from './components/sidebar/sidebar.component';
 import PlaylistEdit from './pages/playlist-edit/playlist-edit.component';
 import PlaylistCreate from './pages/playlist-create/playlist-create.component';
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
+import Header from './components/header/header.component';
 
 const AppContainer = styled.div`
 	display: flex;
+`
+const MainContainer = styled.div`
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 `
 
 const App = () => {
@@ -19,14 +25,17 @@ const App = () => {
     <AppContainer>
 			<GlobalStyle />
 			<Sidebar />
-      <Switch>
-				<ErrorBoundary>
-					<Route exact path='/' component={HomePage} />
-					<Route exact path='/playlist/:playlistId' component={WatchPage} />
-					<Route exact path='/create' component={PlaylistCreate} />
-					<Route exact path='/edit/:playlistId' component={PlaylistEdit} />
-				</ErrorBoundary>
-			</Switch>
+			<MainContainer>
+				<Header />
+				<Switch>
+					<ErrorBoundary>
+						<Route exact path='/' component={HomePage} />
+						<Route exact path='/playlist/:playlistId' component={WatchPage} />
+						<Route exact path='/create' component={PlaylistCreate} />
+						<Route exact path='/edit/:playlistId' component={PlaylistEdit} />
+					</ErrorBoundary>
+				</Switch>
+			</MainContainer>
     </AppContainer>
   );
 }

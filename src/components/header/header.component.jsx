@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { selectCurrentUserId } from '../../redux/user/user.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { googleSignIn } from '../../redux/user/user.actions';
 import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
+import LoginDropdown from '../login-dropdown/login-dropdown.component';
 
 const Container = styled.div`
 	display: flex;
@@ -40,9 +42,29 @@ const LoginContainer = styled.div`
 	width: 200px;
 	font-size: 14px;
 	border-left: 2px solid #1B1B36;
+	position: relative;
 `
 
-const Header = ({ userId }) => {
+const LoggedInContainer = styled.div`
+	display: flex;
+	align-items: center;
+`
+
+const GoogleSignInButton = styled.button`
+  letter-spacing: 0.5px;
+  padding: 15px 25px;
+  font-size: 14px;
+  background-color: #4285f4;
+  color: #fff;
+  font-weight: bolder;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #357ae8;
+	}
+`
+
+const Header = ({ user, signIn }) => {
 	return (
 		<Container>
 			<SearchContainer>
@@ -52,14 +74,32 @@ const Header = ({ userId }) => {
 				<Search type='text' placeholder='Search Playlist' />
 			</SearchContainer>
 			<LoginContainer>
-				{userId}
+				{
+					user ?
+					<LoggedInContainer>
+						{user.displayName}
+						<LoginDropdown />
+					</LoggedInContainer>
+					:
+					<GoogleSignInButton
+						isGoogle
+						text='GOOGLE'
+						onClick={signIn}
+					>
+						GOOGLE SIGN IN
+					</GoogleSignInButton>
+				}
 			</LoginContainer>
 		</Container>
 	);
 }
 
 const mapStateToProps = state => ({
-	userId: selectCurrentUserId(state)
+	user: selectCurrentUser(state)
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = {
+	signIn: googleSignIn
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -2,7 +2,7 @@ import { takeEvery, takeLatest, call, all, put, select } from 'redux-saga/effect
 import history from '../../history';
 import { uploadPlaylistImage, addDocument, addCollectionAndDocuments, updateDocument, getCollectionMap, updateVideoLikes, addVideoToPlaylist, removeVideoFromPlaylist, getPlaylist } from '../../firebase/firebase.utils';
 import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, PLAYLIST_DRAFT_ADD_VIDEO, EDIT_PLAYLIST, EDIT_PLAYLIST_SUCCESS, CREATE_DRAFT, EDITING_START, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_PLAYLIST, FETCH_PLAYLIST_SUCCESS } from './playlist.types';
-import { selectCurrentUserId } from '../user/user.selectors';
+import { selectCurrentUser } from '../user/user.selectors';
 import { selectPlaylistById, selectPlaylistDraftVideos, selectCurrentPlaylistId } from './playlist.selectors';
 import { fetchVideos } from '../video/video.actions';
 
@@ -87,7 +87,7 @@ function* fetchPlaylistAsync({ payload: { playlistId } }) {
 
 function* addVideoToCurrentPlaylist({ payload: { video } }) {
 	const currentPlaylistId = yield select(selectCurrentPlaylistId);
-	const currentUserId = yield select(selectCurrentUserId);
+	const currentUser = yield select(selectCurrentUser);
 
 	yield put({
 		type: ADD_VIDEO,
@@ -95,8 +95,11 @@ function* addVideoToCurrentPlaylist({ payload: { video } }) {
 			playlistId: currentPlaylistId,
 			video: {
 				...video,
-				addedBy: currentUserId,
-				timestampAdded: Date.now()
+				addedBy: {
+					id: currentUser.id,
+					name: currentUser.displayName
+				},
+				timestampAdded: new Date()
 			}
 		}
 	});
@@ -115,7 +118,7 @@ function* removeVideoDB({ payload: { videoId } }) {
 }
 
 function* toggleLike({ payload }) {
-	const currentUserId = yield select(selectCurrentUserId);
+	const currentUser = yield select(selectCurrentUser);
 	const currentPlaylistId = yield select(selectCurrentPlaylistId);
 
 	yield put({
@@ -123,13 +126,16 @@ function* toggleLike({ payload }) {
 		payload: {
 			...payload,
 			playlistId: currentPlaylistId,
-			userId: currentUserId
+			user: {
+				id: currentUser.id,
+				name: currentUser.displayName
+			}
 		}
 	});
 }
 
-function* toggleLikeDB({ payload: { playlistId, videoId, userId, like } }) {
-	yield updateVideoLikes(playlistId, videoId, userId, like);
+function* toggleLikeDB({ payload: { playlistId, videoId, user, like } }) {
+	yield updateVideoLikes(playlistId, videoId, user, like);
 }
 
 const createPlaylistSuccess = payload => ({
@@ -144,7 +150,7 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 			imageUrl = yield uploadPlaylistImage(image);
 		}
 
-		const currentUserId = yield select(selectCurrentUserId);
+		const currentUser = yield select(selectCurrentUser);
 		const playlistVideos = yield select(selectPlaylistDraftVideos);
 		const videosStaticData = {};
 		const videosPlaylistData = {
@@ -166,7 +172,10 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 		const newPlaylist = {
 			name,
 			description,
-			author: currentUserId,
+			author: {
+				id: currentUser.id,
+				name: currentUser.displayName
+			},
 			imageUrl,
 			videos: videosPlaylistData
 		};
@@ -196,7 +205,7 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 			imageUrl = yield uploadPlaylistImage(image);
 		}
 
-		const currentUserId = yield select(selectCurrentUserId);
+		const currentUser = yield select(selectCurrentUser);
 		const playlistVideos = yield select(selectPlaylistDraftVideos);
 		const videosStaticData = {};
 		const videosPlaylistData = {
@@ -219,7 +228,10 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 			id,
 			name,
 			description,
-			author: currentUserId,
+			author: {
+				id: currentUser.id,
+				name: currentUser.displayName
+			},
 			imageUrl,
 			videos: videosPlaylistData
 		};
@@ -244,12 +256,15 @@ const playlistDraftVideoAdd = payload => ({
 });
 
 function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
-	const currentUserId = yield select(selectCurrentUserId);
+	const currentUser = yield select(selectCurrentUser);
 	yield put(playlistDraftVideoAdd({
 		video: {
 			...video,
-			addedBy: currentUserId,
-			timestampAdded: Date.now()
+			addedBy: {
+				id: currentUser.id,
+				name: currentUser.displayName
+			},
+			timestampAdded: new Date()
 		}
 	}));
 }

@@ -109,7 +109,7 @@ const PlaylistCard = ({ id, name, author, imageUrl, videos }) => {
 			}
 			<InfoContainer>
 				<Name>{name}</Name>
-				<CreatedBy>created by {author}</CreatedBy>
+				<CreatedBy>created by {author.name}</CreatedBy>
 				<VideosCount>{videosCountText}</VideosCount>
 				<PlayButton>
 					<PlayArrow />

@@ -95,11 +95,11 @@ export default (state = initialState, { type, payload }) => {
 
 			case TOGGLE_LIKE:
 			case LIKE_TOGGLED_VIA_SOCKET: {
-				const { videoId, userId } = payload;
+				const { videoId, user } = payload;
 				const currentPlaylist = draft.allPlaylists[state.currentPlaylistId];
 				const video = currentPlaylist.videos.byId[videoId];
-				const isLiked = video.likedBy[userId];
-				isLiked ? delete video.likedBy[userId] : video.likedBy[userId] = true;
+				const isLiked = video.likedBy[user.id];
+				isLiked ? delete video.likedBy[user.id] : video.likedBy[user.id] = true;
 
 				currentPlaylist.videos.orderedIds.sort((a, b) => {
 					const likesCountA = Object.keys(currentPlaylist.videos.byId[a].likedBy).length;

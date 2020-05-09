@@ -15,8 +15,14 @@ const config = {
 
 firebase.initializeApp(config);
 
+const auth = firebase.auth();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
+
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({
+	prompt: 'select_account'
+});
 
 const increment = firebase.firestore.FieldValue.increment(1);
 const decrement = firebase.firestore.FieldValue.increment(-1);
@@ -121,7 +127,7 @@ export const uploadPlaylistImage = async image => {
 	return snapshot.ref.getDownloadURL();
 }
 
-export const updateVideoLikes = (playlistId, videoId, userId, like) => {
+export const updateVideoLikes = (playlistId, videoId, user, like) => {
 
 	const batch = firestore.batch();
 	
@@ -132,7 +138,7 @@ export const updateVideoLikes = (playlistId, videoId, userId, like) => {
 
 	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
 	batch.update(playlistDocRef, {
-		[`videos.byId.${videoId}.likedBy.${userId}`]: like
+		[`videos.byId.${videoId}.likedBy.${user.id}`]: like
 	});
 
 	return batch.commit();
@@ -164,6 +170,44 @@ export const removeVideoFromPlaylist = (playlistId, videoId) => {
 	return firestore.collection('playlists').doc(playlistId).update({
 		[`videos.byId.${videoId}`]: firebase.firestore.FieldValue.delete(),
 		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayRemove(videoId)
+	});
+}
+
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+
+export const signOut = () => auth.signOut();
+
+export const getOrCreateUserProfileDocument = async (userAuth, additionalData) => {
+	if (!userAuth) return;
+
+	const userRef = firestore.collection('users').doc(userAuth.uid);
+	const snapshot = await userRef.get();
+
+	if (!snapshot.exists) {
+		const { displayName, email } = userAuth;
+
+		try {
+			await userRef.set({
+				id: userRef.id,
+				displayName,
+				email,
+				createdAt: new Date(),
+				...additionalData
+			});
+		} catch (error) {
+			console.log('error creating user', error.message);
+		}
+	}
+
+	return userRef;
+}
+
+export const getCurrentUser = () => {
+	return new Promise((resolve, reject) => {
+		const unsubscribe = auth.onAuthStateChanged(userAuth => {
+			unsubscribe();
+			resolve(userAuth);
+		}, reject);
 	});
 }
 

@@ -39,6 +39,7 @@ const Sidebar = ({ myPlaylists }) => {
 
 			<SectionTitle>Your Playlists</SectionTitle>
 			{
+				myPlaylists &&
 				myPlaylists.map(playlist => <MenuItem key={playlist.id} label={playlist.name} linkUrl={`/edit/${playlist.id}`} iconKey='playlist' />)
 			}
 			<MenuItem label={'New Playlist'} linkUrl={'/create'} iconKey='add' />

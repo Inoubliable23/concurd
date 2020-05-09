@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { GlobalStyle } from './global.styles';
@@ -10,6 +10,8 @@ import PlaylistEdit from './pages/playlist-edit/playlist-edit.component';
 import PlaylistCreate from './pages/playlist-create/playlist-create.component';
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
 import Header from './components/header/header.component';
+import { connect } from 'react-redux';
+import { checkUserSession } from './redux/user/user.actions';
 
 const AppContainer = styled.div`
 	display: flex;
@@ -20,7 +22,12 @@ const MainContainer = styled.div`
 	flex-direction: column;
 `
 
-const App = () => {
+const App = ({ checkUserSession }) => {
+
+	useEffect(() => {
+		checkUserSession();
+	}, [checkUserSession]);
+
   return (
     <AppContainer>
 			<GlobalStyle />
@@ -40,4 +47,8 @@ const App = () => {
   );
 }
 
-export default App;
+const mapDispatchToProps = {
+	checkUserSession
+};
+
+export default connect(null, mapDispatchToProps)(App);

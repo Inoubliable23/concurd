@@ -19,7 +19,7 @@ const PlaylistSubtitle = styled.div`
 const PlaylistHeader = ({ name, author }) => (
 	<Container>
 		<PlaylistName>{name}</PlaylistName>
-		<PlaylistSubtitle>created by {author}</PlaylistSubtitle>
+		<PlaylistSubtitle>created by {author.name}</PlaylistSubtitle>
 	</Container>
 );
 

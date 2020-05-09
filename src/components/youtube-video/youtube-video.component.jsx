@@ -111,9 +111,7 @@ const YoutubeVideo = ({ videoId, onVideoEnd, videoSetPlay, videoSetPause, isPlay
 					/>
 					<VideoCover onClick={togglePlay}>
 						{
-							isPlaying ?
-							null
-							:
+							!isPlaying &&
 							<PlayButton>
 								<PlayArrow />
 							</PlayButton>

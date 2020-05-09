@@ -23,6 +23,10 @@ export const GlobalStyle = createGlobalStyle`
 		border-style: none;
 	}
 
+	button {
+		border: none;
+	}
+
 	.youtube-container {
 		height: 100%;
 

@@ -6,10 +6,12 @@ export const selectAllPlaylists = state => {
 };
 
 export const selectMyPlaylists = state => {
+	if (!state.user.currentUser) return;
+
+	const currentUser = state.user.currentUser;
 	const playlistsObject = state.playlist.allPlaylists;
-	const currentUserName = state.user.currentUser.name;
 	return Object.keys(playlistsObject).reduce((filteredArray, id) => {
-		if (playlistsObject[id].author === currentUserName) {
+		if (playlistsObject[id].author.id === currentUser.id) {
 			filteredArray.push(playlistsObject[id]);
 		}
 		return filteredArray;
@@ -68,7 +70,7 @@ export const selectLikesCount = (state, videoId) => {
 export const selectIsVideoLikedByCurrentUser = (state, videoId) => {
 	const currentPlaylist = selectCurrentPlaylist(state);
 	const video = currentPlaylist.videos.byId[videoId];
-	const currentUserId = state.user.currentUser.name;
+	const currentUserId = state.user.currentUser.id;
 
 	return !!video.likedBy[currentUserId];
 };

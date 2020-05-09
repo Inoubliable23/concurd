@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { fetchSearchStart, clearSearchResults } from '../../redux/search/search.actions';
@@ -27,19 +27,23 @@ const SearchDropdown = styled.div`
 
 const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideoSelect, blacklist }) => {
 
+	const [searchText, setSearchText] = useState('');
+
 	const handleInputChange = event => {
-		const queryString = event.target.value;
-		if (queryString.length < 2) {
+		const inputValue = event.target.value;
+		setSearchText(inputValue);
+		if (inputValue.length < 1) {
 			clearSearchResults();
 			return;
 		}
 
 		searchVideos({
-			queryString
+			queryString: inputValue
 		});
 	}
 
 	const handleResultClick = video => {
+		setSearchText('');
 		clearSearchResults();
 		onVideoSelect(video);
 	}
@@ -49,6 +53,7 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideo
 			<SearchInput
 				type='text'
 				placeholder='Search for Youtube video and add it to the playlist'
+				value={searchText}
 				onChange={handleInputChange}
 			/>
 			<SearchDropdown>

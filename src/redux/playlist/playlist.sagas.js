@@ -99,17 +99,14 @@ function* addVideoToCurrentPlaylist({ payload: { video } }) {
 					id: currentUser.id,
 					name: currentUser.displayName
 				},
-				timestampAdded: new Date()
+				timestampAdded: Date.now()
 			}
 		}
 	});
 }
 
 function* addVideoDB({ payload: { playlistId, video } }) {
-	const videoObject = {
-		...video
-	};
-	yield addVideoToPlaylist(playlistId, videoObject);
+	yield addVideoToPlaylist(playlistId, video);
 }
 
 function* removeVideoDB({ payload: { videoId } }) {
@@ -264,7 +261,7 @@ function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
 				id: currentUser.id,
 				name: currentUser.displayName
 			},
-			timestampAdded: new Date()
+			timestampAdded: Date.now()
 		}
 	}));
 }

@@ -43,7 +43,14 @@ export const selectCurrentPlaylist = state => {
 
 export const selectCurrentVideoId = state => state.playlist.currentVideoId;
 
-export const selectPlaylistDraftVideos = state => state.playlist.playlistDraftVideos;
+export const selectPlaylistDraftVideos = state => {
+	return state.playlist.playlistDraftVideos.map(draftVideo => {
+		return {
+			...draftVideo,
+			...state.video.allVideos[draftVideo.id]
+		}
+	});
+};
 
 export const selectPlaylistVideosWithData = state => {
 	const currentPlaylist = selectCurrentPlaylist(state);

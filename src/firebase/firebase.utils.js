@@ -152,10 +152,15 @@ export const addVideoToPlaylist = (playlistId, video) => {
 		likedBy: {}
 	};
 
+	const videoObject = {
+		id: video.id,
+		youtubeData: video.youtubeData
+	};
+
 	const batch = firestore.batch();
 	
 	const videoDocRef = firestore.collection('videos').doc(video.id);
-	batch.set(videoDocRef, video, {merge: true});
+	batch.set(videoDocRef, videoObject, {merge: true});
 
 	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
 	batch.update(playlistDocRef, {
@@ -191,7 +196,7 @@ export const getOrCreateUserProfileDocument = async (userAuth, additionalData) =
 				id: userRef.id,
 				displayName,
 				email,
-				createdAt: new Date(),
+				createdAt: Date.now(),
 				...additionalData
 			});
 		} catch (error) {

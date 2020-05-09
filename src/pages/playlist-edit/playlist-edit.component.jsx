@@ -5,24 +5,29 @@ import { withRouter } from 'react-router-dom';
 import PlaylistEditMain from '../../components/playlist-edit-main/playlist-edit-main.component';
 import PlaylistEditVideos from '../../components/playlist-edit-videos/playlist-edit-videos.component';
 import { selectPlaylistById } from '../../redux/playlist/playlist.selectors';
-import { editingStart } from '../../redux/playlist/playlist.actions';
+import { editingStart, fetchPlaylist } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	flex: 1;
 	padding: 20px;
 `
 
-const PlaylistEdit = ({ playlist, editingStart }) => {
+const PlaylistEdit = ({ match, fetchPlaylist, playlist, editingStart }) => {
 
+	const playlistId = match.params.playlistId;
+	
 	useEffect(() => {
-		editingStart({
-			playlistId: playlist.id
+		fetchPlaylist({
+			playlistId: playlistId
 		});
-	}, [editingStart, playlist.id]);
+		editingStart({
+			playlistId: playlistId
+		});
+	}, [fetchPlaylist, editingStart, playlistId]);
 
 	return (
 		<Container>
-			<PlaylistEditMain key={playlist.id} {...playlist} />
+			<PlaylistEditMain key={playlistId} {...playlist} />
 			<PlaylistEditVideos />
 		</Container>
 	);
@@ -33,6 +38,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = {
+	fetchPlaylist,
 	editingStart
 };
 

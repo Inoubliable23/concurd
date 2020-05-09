@@ -94,11 +94,11 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemove
 				<RemoveColumnHeader>Remove</RemoveColumnHeader>
 			</TableHeader>
 			{
-				videos.map(video => (
+				videos && videos.map(video => (
 					<TableRow key={video.id}>
-						<Thumbnail src={video.youtubeData.thumbnailUrl} />
-						<Title>{video.youtubeData.title}</Title>
-						<ChannelName>{video.youtubeData.channelName}</ChannelName>
+						<Thumbnail src={video.youtubeData && video.youtubeData.thumbnailUrl} />
+						<Title>{video.youtubeData && video.youtubeData.title}</Title>
+						<ChannelName>{video.youtubeData && video.youtubeData.channelName}</ChannelName>
 						<Date>{dayjs(video.timestampAdded).format('DD.MM.YYYY')}</Date>
 						<Remove onClick={() => handleRemoveClick(video.id)}>
 							<IconContainer>
@@ -109,7 +109,7 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemove
 				))
 			}
 			<VideosSearch
-				blacklist={videos.map(video => video.id)}
+				blacklist={videos && videos.map(video => video.id)}
 				onVideoSelect={handleVideoSelect}
 			/>
 		</Table>

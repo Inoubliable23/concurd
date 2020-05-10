@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import usePrevious from '../../hooks/usePrevious.hook';
+import usePrevious from '../../hooks/usePrevious';
 
 import { selectCurrentPlaylist, selectCurrentVideoId } from '../../redux/playlist/playlist.selectors';
 import { fetchPlaylist, setCurrentPlaylist, addVideoToCurrentPlaylist, setCurrentVideo } from '../../redux/playlist/playlist.actions';
@@ -11,12 +11,14 @@ import YoutubeVideo from '../../components/youtube-video/youtube-video.component
 import Playlist from '../../components/playlist/playlist.component';
 import VideosSearch from '../../components/videos-search/videos-search.component';
 import { connectToSocket } from '../../redux/socket/socket.actions';
+import CommentsSection from '../../components/comments-section/comments-section.component';
 
 const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	flex: 1;
+	padding: 20px;
 `
 
 const VideoWithPlaylist = styled.div`
@@ -107,6 +109,7 @@ const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentP
 					</PlaylistWithSearch>
 				</VideoWithPlaylist>
 			}
+			<CommentsSection />
 		</Container>
 	);
 }

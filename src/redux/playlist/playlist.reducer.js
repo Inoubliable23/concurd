@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, EDIT_PLAYLIST_SUCCESS, CREATE_DRAFT, CREATING_START, FETCH_PLAYLIST_SUCCESS, SET_CURRENT_VIDEO } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, EDIT_PLAYLIST_SUCCESS, CREATE_DRAFT, CREATING_START, FETCH_PLAYLIST_SUCCESS, SET_CURRENT_VIDEO, ADD_COMMENT, COMMENT_ADDED_VIA_SOCKET } from './playlist.types';
 import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
@@ -107,6 +107,14 @@ export default (state = initialState, { type, payload }) => {
 					return likesCountB - likesCountA;
 				});
 
+				break;
+			}
+
+			case ADD_COMMENT:
+			case COMMENT_ADDED_VIA_SOCKET: {
+				const { comment } = payload;
+				draft.allPlaylists[state.currentPlaylistId].comments.byId[comment.id] = comment;
+				draft.allPlaylists[state.currentPlaylistId].comments.orderedIds.push(comment.id);
 				break;
 			}
 

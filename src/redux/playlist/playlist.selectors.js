@@ -54,6 +54,7 @@ export const selectPlaylistDraftVideos = state => {
 
 export const selectPlaylistVideosWithData = state => {
 	const currentPlaylist = selectCurrentPlaylist(state);
+	if (!currentPlaylist) return;
 
 	const videosWithData = currentPlaylist.videos.orderedIds.map(id => {
 		return {
@@ -66,6 +67,8 @@ export const selectPlaylistVideosWithData = state => {
 
 export const selectLikesCount = (state, videoId) => {
 	const currentPlaylist = selectCurrentPlaylist(state);
+	if (!currentPlaylist) return;
+
 	const video = currentPlaylist.videos.byId[videoId];
 
 	return Object.keys(video.likedBy).reduce((likesCount, id) => {
@@ -76,8 +79,17 @@ export const selectLikesCount = (state, videoId) => {
 
 export const selectIsVideoLikedByCurrentUser = (state, videoId) => {
 	const currentPlaylist = selectCurrentPlaylist(state);
+	if (!currentPlaylist) return;
+
 	const video = currentPlaylist.videos.byId[videoId];
 	const currentUserId = state.user.currentUser.id;
 
 	return !!video.likedBy[currentUserId];
 };
+
+export const selectPlaylistComments = state => {
+	const currentPlaylist = selectCurrentPlaylist(state);
+	if (!currentPlaylist) return [];
+
+	return currentPlaylist.comments.orderedIds.map(id => currentPlaylist.comments.byId[id]);
+}

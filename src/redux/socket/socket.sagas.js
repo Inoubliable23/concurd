@@ -4,10 +4,11 @@ import io from 'socket.io-client';
 
 import { VIDEO_SET_PAUSE, VIDEO_SET_PLAY } from '../video/video.types';
 import { videoPausedViaSocket, videoPlayedViaSocket } from '../video/video.actions';
-import { TOGGLE_LIKE, ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST } from '../playlist/playlist.types';
+import { TOGGLE_LIKE, ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, ADD_COMMENT } from '../playlist/playlist.types';
 import { selectCurrentUserId } from '../user/user.selectors';
 import { CONNECT_TO_SOCKET } from './socket.types';
 import { likeToggledViaSocket, videoAddedViaSocket, videoRemovedViaSocket } from './socket.actions';
+import { commentAddedViaSocket } from '../playlist/playlist.actions';
 
 const SOCKET_SERVER_URL = 'http://localhost:5000/';
 const SocketEvents = {
@@ -16,7 +17,8 @@ const SocketEvents = {
 	VIDEO_ADD: 'add',
 	VIDEO_REMOVE: 'remove',
 	VIDEO_PLAY: 'play',
-	VIDEO_PAUSE: 'pause'
+	VIDEO_PAUSE: 'pause',
+	COMMENT_ADD: 'comment add'
 };
 
 function* onConnectToSocket() {
@@ -79,6 +81,10 @@ function subscribe(socket) {
 		const handlePause = () => {
 			emit(videoPausedViaSocket());
 		}
+
+		const handleCommentAdd = data => {
+			emit(commentAddedViaSocket(data));
+		}
 		
 		socket.on(SocketEvents.USER_JOINED, handleUserJoined);
 		socket.on(SocketEvents.VIDEO_LIKE_TOGGLE, handleVideoLikeToggle);
@@ -86,6 +92,7 @@ function subscribe(socket) {
 		socket.on(SocketEvents.VIDEO_REMOVE, handleRemove);
 		socket.on(SocketEvents.VIDEO_PLAY, handlePlay);
 		socket.on(SocketEvents.VIDEO_PAUSE, handlePause);
+		socket.on(SocketEvents.COMMENT_ADD, handleCommentAdd);
 		
 		// unsubscribe
 		return () => {
@@ -95,6 +102,7 @@ function subscribe(socket) {
 			socket.off(SocketEvents.VIDEO_REMOVE, handleRemove);
 			socket.off(SocketEvents.VIDEO_PLAY, handlePlay);
 			socket.off(SocketEvents.VIDEO_PAUSE, handlePause);
+			socket.off(SocketEvents.COMMENT_ADD, handleCommentAdd);
 		};
 	});
 }
@@ -105,6 +113,7 @@ function* write(socket) {
   yield fork(emitVideoRemove, socket);
   yield fork(emitVideoPlay, socket);
 	yield fork(emitVideoPause, socket);
+	yield fork(emitCommentAdd, socket);
 }
 
 function* emitLikeToggle(socket) {
@@ -145,6 +154,15 @@ function* emitVideoPause(socket) {
   while (true) {
     yield take(VIDEO_SET_PAUSE);
     socket.emit(SocketEvents.VIDEO_PAUSE);
+  }
+}
+
+function* emitCommentAdd(socket) {
+  while (true) {
+    const { payload: { comment } } = yield take(ADD_COMMENT);
+    socket.emit(SocketEvents.COMMENT_ADD, {
+			comment
+		});
   }
 }
 

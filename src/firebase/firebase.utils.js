@@ -165,16 +165,24 @@ export const addVideoToPlaylist = (playlistId, video) => {
 	const playlistDocRef = firestore.collection('playlists').doc(playlistId);
 	batch.update(playlistDocRef, {
 		[`videos.byId.${video.id}`]: videoPlaylistObject,
-		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayUnion(video.id)
+		'videos.orderedIds': firebase.firestore.FieldValue.arrayUnion(video.id)
 	});
 
 	return batch.commit();
 }
 
+export const addCommentToPlaylist = (playlistId, comment) => {
+	const playlistRef = firestore.collection('playlists').doc(playlistId);
+	return playlistRef.update({
+		[`comments.byId.${comment.id}`]: comment,
+		'comments.orderedIds': firebase.firestore.FieldValue.arrayUnion(comment.id)
+	});
+}
+
 export const removeVideoFromPlaylist = (playlistId, videoId) => {
 	return firestore.collection('playlists').doc(playlistId).update({
 		[`videos.byId.${videoId}`]: firebase.firestore.FieldValue.delete(),
-		[`videos.orderedIds`]: firebase.firestore.FieldValue.arrayRemove(videoId)
+		'videos.orderedIds': firebase.firestore.FieldValue.arrayRemove(videoId)
 	});
 }
 

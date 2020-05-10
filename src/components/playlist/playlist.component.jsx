@@ -12,6 +12,7 @@ const Container = styled.div`
 
 	&::-webkit-scrollbar {
 		width: 8px;
+		background-color: rgba(200, 200, 200, 0.1);
 	}
 		
 	&::-webkit-scrollbar-thumb {

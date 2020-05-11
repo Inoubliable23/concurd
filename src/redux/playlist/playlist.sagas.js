@@ -1,15 +1,19 @@
 import { takeEvery, takeLatest, call, all, put, select } from 'redux-saga/effects';
 import { v4 as uuid } from 'uuid';
 import history from '../../history';
-import { uploadPlaylistImage, addDocument, addCollectionAndDocuments, updateDocument, getCollectionMap, updateVideoLikes, addVideoToPlaylist, removeVideoFromPlaylist, getPlaylist, addCommentToPlaylist } from '../../firebase/firebase.utils';
-import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, CREATE_PLAYLIST, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, EDIT_PLAYLIST, EDITING_START, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_PLAYLIST, ADD_COMMENT_TO_CURRENT_PLAYLIST, ADD_COMMENT } from './playlist.types';
-import { selectCurrentUser } from '../user/user.selectors';
-import { selectPlaylistById, selectPlaylistDraftVideos, selectCurrentPlaylistId } from './playlist.selectors';
+import { uploadPlaylistImage, addDocument, addCollectionAndDocuments, updateDocument, getCollectionMap, updateVideoLikes, addVideoToPlaylist, removeVideoFromPlaylist, getPlaylist, addCommentToPlaylist, getMyPlaylists } from '../../firebase/firebase.utils';
+import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, CREATE_PLAYLIST, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_PLAYLIST, ADD_COMMENT_TO_CURRENT_PLAYLIST, ADD_COMMENT, FETCH_MY_PLAYLISTS, SAVE_PLAYLIST_EDIT } from './playlist.types';
+import { selectCurrentUser, selectCurrentUserId } from '../user/user.selectors';
+import { selectPlaylistDraft, selectCurrentPlaylistId, selectPlaylistById } from './playlist.selectors';
 import { fetchVideos } from '../video/video.actions';
-import { fetchTopPlaylistsSuccess, fetchPlaylistSuccess, createPlaylistSuccess, editPlaylistSuccess, playlistDraftVideoAdd, createDraft } from './playlist.actions';
+import { fetchTopPlaylistsSuccess, fetchPlaylistSuccess, createPlaylistSuccess, editPlaylistSuccess, playlistDraftVideoAdd, fetchMyPlaylistsSuccess, editPlaylistFailure } from './playlist.actions';
 
 function* onFetchTopPlaylistsStart() {
 	yield takeLatest(FETCH_TOP_PLAYLISTS, fetchTopPlaylistsAsync);
+};
+
+function* onFetchMyPlaylistsStart() {
+	yield takeLatest(FETCH_MY_PLAYLISTS, fetchMyPlaylistsAsync);
 };
 
 function* onFetchPlaylistStart() {
@@ -40,12 +44,8 @@ function* onCreatePlaylist() {
 	yield takeEvery(CREATE_PLAYLIST, createPlaylistAsync);
 }
 
-function* onStartEditing() {
-	yield takeEvery(EDITING_START, editingStart);
-}
-
 function* onEditPlaylist() {
-	yield takeEvery(EDIT_PLAYLIST, editPlaylistAsync);
+	yield takeEvery(SAVE_PLAYLIST_EDIT, savePlaylistEditAsync);
 }
 
 function* onPlaylistDraftVideoAdd() {
@@ -64,6 +64,16 @@ function* fetchTopPlaylistsAsync() {
 	try {
 		const playlistsMap = yield getCollectionMap('playlists');
 		yield put(fetchTopPlaylistsSuccess(playlistsMap));
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+function* fetchMyPlaylistsAsync() {
+	try {
+		const currentUserId = yield select(selectCurrentUserId);
+		const playlistsMap = yield getMyPlaylists(currentUserId);
+		yield put(fetchMyPlaylistsSuccess(playlistsMap));
 	} catch (error) {
 		console.log(error);
 	}
@@ -139,13 +149,14 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 		}
 
 		const currentUser = yield select(selectCurrentUser);
-		const playlistVideos = yield select(selectPlaylistDraftVideos);
+		const playlistDraft = yield select(selectPlaylistDraft);
 		const videosStaticData = {};
+		const playlistDraftVideos = playlistDraft.videos || [];
 		const videosPlaylistData = {
 			byId: {},
-			orderedIds: playlistVideos.map(video => video.id)
+			orderedIds: playlistDraftVideos.map(video => video.id)
 		};
-		playlistVideos.forEach(video => {
+		playlistDraftVideos.forEach(video => {
 			videosStaticData[video.id] = {
 				id: video.id,
 				youtubeData: video.youtubeData
@@ -185,20 +196,22 @@ function* createPlaylistAsync({ payload: { name, description, image } }) {
 	}
 };
 
-function* editPlaylistAsync({ payload: { id, name, description, image } }) {
+function* savePlaylistEditAsync({ payload: { playlistId } }) {
 	try {
-		let imageUrl = null;
-		if (image) {
-			imageUrl = yield uploadPlaylistImage(image);
+		const playlistDraft = yield select(selectPlaylistDraft);
+		const playlist = yield select(selectPlaylistById, playlistId);
+		let imageUrl;
+		if (playlistDraft.image) {
+			imageUrl = yield uploadPlaylistImage(playlistDraft.image);
 		}
 
-		const playlistVideos = yield select(selectPlaylistDraftVideos);
 		const videosStaticData = {};
+		const playlistDraftVideos = playlistDraft.videos || [];
 		const videosPlaylistData = {
 			byId: {},
-			orderedIds: playlistVideos.map(video => video.id)
+			orderedIds: playlistDraftVideos.map(video => video.id)
 		};
-		playlistVideos.forEach(video => {
+		playlistDraftVideos.forEach(video => {
 			videosStaticData[video.id] = {
 				id: video.id,
 				youtubeData: video.youtubeData
@@ -211,12 +224,12 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 			};
 		});
 		const editedPlaylist = {
-			id,
-			name,
-			description,
-			imageUrl,
-			videos: videosPlaylistData
+			id: playlistId,
+			name: playlistDraft.name || playlist.name,
+			description: playlistDraft.description || playlist.description,
+			imageUrl: imageUrl || playlist.imageUrl
 		};
+		if (playlistDraft.videos) editedPlaylist.videos = videosPlaylistData;
 		
 		yield updateDocument('playlists', editedPlaylist);
 		yield addCollectionAndDocuments('videos', videosStaticData);
@@ -228,13 +241,15 @@ function* editPlaylistAsync({ payload: { id, name, description, image } }) {
 			videos: videosStaticData
 		}));
 	} catch (error) {
+		yield put(editPlaylistFailure());
 		console.log(error);
 	}
 };
 
-function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
+function* playlistDraftVideoAddWithCurrentUser({ payload: { video, playlistId } }) {
 	const currentUser = yield select(selectCurrentUser);
 	yield put(playlistDraftVideoAdd({
+		playlistId,
 		video: {
 			...video,
 			addedBy: {
@@ -243,13 +258,6 @@ function* playlistDraftVideoAddWithCurrentUser({ payload: { video } }) {
 			},
 			timestampAdded: Date.now()
 		}
-	}));
-}
-
-function* editingStart({ payload: { playlistId } }) {
-	const playlist = yield select(selectPlaylistById, playlistId);
-	yield put(createDraft({
-		playlist
 	}));
 }
 
@@ -282,12 +290,12 @@ function* addCommentDB({ payload: { playlistId, comment } }) {
 export function* playlistSagas() {
 	yield all([
 		call(onFetchTopPlaylistsStart),
+		call(onFetchMyPlaylistsStart),
 		call(onFetchPlaylistStart),
 		call(onAddVideo),
 		call(onAddVideoDB),
 		call(onRemoveVideo),
 		call(onCreatePlaylist),
-		call(onStartEditing),
 		call(onEditPlaylist),
 		call(onPlaylistDraftVideoAdd),
 		call(onToggleLike),

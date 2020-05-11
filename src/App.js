@@ -12,6 +12,7 @@ import ErrorBoundary from './components/error-boundary/error-boundary.component'
 import Header from './components/header/header.component';
 import { connect } from 'react-redux';
 import { checkUserSession } from './redux/user/user.actions';
+import { isCheckingSession } from './redux/user/user.selectors';
 
 const AppContainer = styled.div`
 	display: flex;
@@ -22,7 +23,7 @@ const MainContainer = styled.div`
 	flex-direction: column;
 `
 
-const App = ({ checkUserSession }) => {
+const App = ({ checkUserSession, isCheckingSession }) => {
 
 	useEffect(() => {
 		checkUserSession();
@@ -31,24 +32,35 @@ const App = ({ checkUserSession }) => {
   return (
     <AppContainer>
 			<GlobalStyle />
-			<Sidebar />
-			<MainContainer>
-				<Header />
-				<Switch>
-					<ErrorBoundary>
-						<Route exact path='/' component={HomePage} />
-						<Route exact path='/playlist/:playlistId' component={WatchPage} />
-						<Route exact path='/create' component={PlaylistCreate} />
-						<Route exact path='/edit/:playlistId' component={PlaylistEdit} />
-					</ErrorBoundary>
-				</Switch>
-			</MainContainer>
+			{
+				isCheckingSession ?
+				null
+				:
+				<>
+					<Sidebar />
+					<MainContainer>
+						<Header />
+						<Switch>
+							<ErrorBoundary>
+								<Route exact path='/' component={HomePage} />
+								<Route exact path='/playlist/:playlistId' component={WatchPage} />
+								<Route exact path='/create' component={PlaylistCreate} />
+								<Route exact path='/edit/:playlistId' component={PlaylistEdit} />
+							</ErrorBoundary>
+						</Switch>
+					</MainContainer>
+				</>
+			}
     </AppContainer>
   );
 }
+
+const mapStateToProps = state => ({
+	isCheckingSession: isCheckingSession(state)
+});
 
 const mapDispatchToProps = {
 	checkUserSession
 };
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

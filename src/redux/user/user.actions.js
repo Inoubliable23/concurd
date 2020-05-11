@@ -1,4 +1,12 @@
-import { SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SIGN_OUT, SIGN_OUT_SUCCESS, SIGN_OUT_FAILURE, GOOGLE_SIGN_IN, CHECK_USER_SESSION } from './user.types';
+import { SIGN_IN_SUCCESS, SIGN_IN_FAILURE, SIGN_OUT, SIGN_OUT_SUCCESS, SIGN_OUT_FAILURE, GOOGLE_SIGN_IN, CHECK_USER_SESSION, CHECK_USER_SESSION_START, CHECK_USER_SESSION_END } from './user.types';
+
+export const checkingSessionStart = () => ({
+	type: CHECK_USER_SESSION_START
+});
+
+export const checkingSessionEnd = () => ({
+	type: CHECK_USER_SESSION_END
+});
 
 export const googleSignIn = () => ({
 	type: GOOGLE_SIGN_IN

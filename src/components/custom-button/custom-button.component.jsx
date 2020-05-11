@@ -21,9 +21,9 @@ export const Container = styled.button`
 	}
 `
 
-const CustomButton = ({ text }) => {
+const CustomButton = ({ text, onClick }) => {
 	return (
-		<Container>
+		<Container onClick={onClick}>
 			{text}
 		</Container>
 	);

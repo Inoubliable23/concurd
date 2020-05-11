@@ -20,6 +20,8 @@ export const selectMyPlaylists = state => {
 
 export const selectPlaylistById = (state, playlistId) => {
 	const playlist = state.playlist.allPlaylists[playlistId];
+	if (!playlist) return;
+	
 	const videosArray = playlist.videos.orderedIds.map(videoId => {
 		return {
 			...playlist.videos.byId[videoId],
@@ -43,13 +45,21 @@ export const selectCurrentPlaylist = state => {
 
 export const selectCurrentVideoId = state => state.playlist.currentVideoId;
 
-export const selectPlaylistDraftVideos = state => {
-	return state.playlist.playlistDraftVideos.map(draftVideo => {
-		return {
-			...draftVideo,
-			...state.video.allVideos[draftVideo.id]
-		}
-	});
+export const selectPlaylistDraft = state => {
+	let videos = null;
+	if (state.playlist.playlistDraft.videos) {
+		videos = state.playlist.playlistDraft.videos.map(draftVideo => {
+			return {
+				...draftVideo,
+				...state.video.allVideos[draftVideo.id]
+			}
+		});
+	}
+	
+	return {
+		...state.playlist.playlistDraft,
+		videos
+	};
 };
 
 export const selectPlaylistVideosWithData = state => {

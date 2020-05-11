@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { ReactComponent as RemoveIconFilled } from '../../assets/icons/delete.svg';
 import VideosSearch from '../videos-search/videos-search.component';
 import { playlistDraftAddVideoWithCurrentUser, playlistDraftRemoveVideo } from '../../redux/playlist/playlist.actions';
-import { selectPlaylistDraftVideos } from '../../redux/playlist/playlist.selectors';
 
 const Table = styled.div`
 	margin-top: 50px;
@@ -71,20 +70,23 @@ const Remove = styled.div`
 	cursor: pointer;
 `
 
-const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemoveVideo }) => {
+const PlaylistEditVideos = ({ playlistId, playlistVideos, draftVideos, playlistDraftAddVideo, playlistDraftRemoveVideo }) => {
 
 	const handleVideoSelect = video => {
 		playlistDraftAddVideo({
+			playlistId,
 			video
 		});
 	}
 
 	const handleRemoveClick = videoId => {
 		playlistDraftRemoveVideo({
+			playlistId,
 			videoId
 		});
 	}
 
+	const videos = draftVideos || playlistVideos;
 	return (
 		<Table>
 			<TableHeader>
@@ -116,13 +118,9 @@ const PlaylistEditVideos = ({ videos, playlistDraftAddVideo, playlistDraftRemove
 	);
 }
 
-const mapStateToProps = state => ({
-	videos: selectPlaylistDraftVideos(state)
-});
-
 const mapDispatchToProps = {
 	playlistDraftAddVideo: playlistDraftAddVideoWithCurrentUser,
 	playlistDraftRemoveVideo
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaylistEditVideos);
+export default connect(null, mapDispatchToProps)(PlaylistEditVideos);

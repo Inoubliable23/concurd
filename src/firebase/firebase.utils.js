@@ -114,6 +114,13 @@ export const getTopVideos = async numberOfVideos => {
 	return videosArray;
 }
 
+export const getMyPlaylists = async userId => {
+	const playlistsRef = firestore.collection('playlists');
+	const snapshot = await playlistsRef.where('author.id', '==', userId).get();
+	const playlists = convertSnapshotToMap(snapshot);
+	return playlists;
+}
+
 export const getCollectionMap = async collectionKey => {
 	const collectionRef = firestore.collection(collectionKey);
 	const snapshot = await collectionRef.get();

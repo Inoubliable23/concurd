@@ -1,20 +1,24 @@
 import produce from 'immer';
-import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, EDIT_PLAYLIST_SUCCESS, CREATE_DRAFT, CREATING_START, FETCH_PLAYLIST_SUCCESS, SET_CURRENT_VIDEO, ADD_COMMENT, COMMENT_ADDED_VIA_SOCKET } from './playlist.types';
+import { SET_CURRENT_PLAYLIST, TOGGLE_LIKE, ADD_VIDEO, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_TOP_PLAYLISTS_SUCCESS, CREATE_PLAYLIST_SUCCESS, PLAYLIST_DRAFT_ADD_VIDEO, PLAYLIST_DRAFT_REMOVE_VIDEO, SAVE_PLAYLIST_EDIT_SUCCESS, CREATING_START, FETCH_PLAYLIST_SUCCESS, SET_CURRENT_VIDEO, ADD_COMMENT, COMMENT_ADDED_VIA_SOCKET, FETCH_MY_PLAYLISTS_SUCCESS, SET_DRAFT_DATA, SAVE_PLAYLIST_EDIT_FAILURE } from './playlist.types';
 import { LIKE_TOGGLED_VIA_SOCKET, VIDEO_ADDED_VIA_SOCKET, VIDEO_REMOVED_VIA_SOCKET } from '../socket/socket.types';
 
 const initialState = {
 	currentPlaylistId: null,
 	currentVideoId: null,
 	allPlaylists: {},
-	playlistDraftVideos: []
+	playlistDraft: {}
 }
 
 export default (state = initialState, { type, payload }) => {
 	return produce(state, draft => {
 		switch (type) {
 
-			case FETCH_TOP_PLAYLISTS_SUCCESS: {
-				draft.allPlaylists = payload.playlists;
+			case FETCH_TOP_PLAYLISTS_SUCCESS:
+			case FETCH_MY_PLAYLISTS_SUCCESS: {
+				draft.allPlaylists = {
+					...draft.allPlaylists,
+					...payload.playlists
+				};
 				break;
 			}
 
@@ -35,32 +39,58 @@ export default (state = initialState, { type, payload }) => {
 			}
 
 			case CREATING_START: {
-				draft.playlistDraftVideos = [];
+				draft.playlistDraft = {};
 				break;
 			}
-			case CREATE_DRAFT: {
-				draft.playlistDraftVideos = payload.playlist.videos;
+			case SET_DRAFT_DATA: {
+				draft.playlistDraft = {
+					...draft.playlistDraft,
+					...payload
+				};
 				break;
 			}
 			case PLAYLIST_DRAFT_ADD_VIDEO: {
-				const { video } = payload;
-				draft.playlistDraftVideos.push({
+				const { video, playlistId } = payload;
+				const videoObject = {
 					id: video.id,
 					addedBy: video.addedBy,
 					timestampAdded: video.timestampAdded,
 					likedBy: {}
-				});
+				};
+
+				if (!draft.playlistDraft.videos) {
+					if (!playlistId) {
+						draft.playlistDraft.videos = [videoObject];
+						break;
+					}
+					const playlistVideos = draft.allPlaylists[playlistId].videos;
+					draft.playlistDraft.videos = playlistVideos.orderedIds.map(id => playlistVideos.byId[id]);
+				}
+				draft.playlistDraft.videos.push(videoObject);
 				break;
 			}
 			case PLAYLIST_DRAFT_REMOVE_VIDEO: {
-				const { videoId } = payload;
-				draft.playlistDraftVideos = draft.playlistDraftVideos.filter(video => video.id !== videoId);
+				const { videoId, playlistId } = payload;
+				if (!draft.playlistDraft.videos) {
+					const playlistVideos = draft.allPlaylists[playlistId].videos;
+					draft.playlistDraft.videos = playlistVideos.orderedIds.map(id => playlistVideos.byId[id]);
+				}
+				draft.playlistDraft.videos = draft.playlistDraft.videos.filter(video => video.id !== videoId);
 				break;
 			}
 
 			case CREATE_PLAYLIST_SUCCESS:
-			case EDIT_PLAYLIST_SUCCESS: {
-				draft.allPlaylists[payload.playlist.id] = payload.playlist;
+			case SAVE_PLAYLIST_EDIT_SUCCESS: {
+				const { playlist } = payload;
+				draft.allPlaylists[playlist.id] = {
+					...draft.allPlaylists[playlist.id],
+					...playlist
+				};
+				draft.playlistDraft = {};
+				break;
+			}
+			case SAVE_PLAYLIST_EDIT_FAILURE: {
+				draft.playlistDraft = {};
 				break;
 			}
 

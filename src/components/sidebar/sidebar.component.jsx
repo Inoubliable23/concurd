@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import MenuItem from '../menu-item/menu-item.component';
 import { selectMyPlaylists } from '../../redux/playlist/playlist.selectors';
+import { fetchMyPlaylists } from '../../redux/playlist/playlist.actions';
 
 const Container = styled.div`
 	height: 100vh;
@@ -28,7 +29,12 @@ const SectionTitle = styled.div`
 	font-size: 16px;
 `
 
-const Sidebar = ({ myPlaylists }) => {
+const Sidebar = ({ fetchMyPlaylists, myPlaylists }) => {
+
+	useEffect(() => {
+		fetchMyPlaylists();
+	}, [fetchMyPlaylists]);
+
 	return (
 		<Container>
 			<Logo to={'/'}>concurd</Logo>
@@ -51,4 +57,8 @@ const mapStateToProps = state => ({
 	myPlaylists: selectMyPlaylists(state)
 });
 
-export default connect(mapStateToProps)(Sidebar);
+const mapDispatchToProps = {
+	fetchMyPlaylists
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

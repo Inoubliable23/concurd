@@ -9,7 +9,7 @@ export const Container = styled.button`
   line-height: 50px;
   padding: 0 35px;
   font-size: 15px;
-  background-color: #F5A623;
+  background-color: ${props => props.theme.secondary};
   color: white;
   text-transform: uppercase;
   font-weight: bolder;
@@ -17,7 +17,7 @@ export const Container = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #E39412;
+    background-color: ${props => props.theme.secondaryDark};
 	}
 `
 

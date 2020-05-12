@@ -17,8 +17,8 @@ const Title = styled.div`
 
 const CommentsContainer = styled.div`
 	margin-top: 10px;
-	border-top: 1px solid #9A9AAB;
-	border-bottom: 1px solid #9A9AAB;
+	border-top: 1px solid ${props => props.theme.subtext};
+	border-bottom: 1px solid ${props => props.theme.subtext};
 	padding: 10px 0;
 	max-height: 300px;
   overflow-y: scroll;
@@ -65,13 +65,13 @@ const CommentInput = styled.input`
 const SendButton = styled.button`
 	padding: 0 20px;
 	font-size: 14px;
-	background-color: #F5A623;
+	background-color: ${props => props.theme.secondary};
 	color: #fff;
   font-weight: bolder;
 	cursor: pointer;
 
 	&:hover {
-		background-color: #E39412;
+		background-color: ${props => props.theme.secondaryDark};
 	}
 `
 

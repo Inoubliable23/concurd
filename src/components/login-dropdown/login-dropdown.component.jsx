@@ -24,13 +24,13 @@ const Dropdown = styled.div`
 const SignOutButton = styled.button`
 	padding: 15px 35px;
 	font-size: 15px;
-	background-color: #F5A623;
+	background-color: ${props => props.theme.secondary};
 	color: #fff;
 	font-weight: bolder;
 	cursor: pointer;
 
 	&:hover {
-		background-color: #E39412;
+		background-color: ${props => props.theme.secondaryDark};
 	}
 `
 

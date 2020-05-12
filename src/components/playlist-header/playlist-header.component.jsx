@@ -13,7 +13,7 @@ const PlaylistName = styled.div`
 
 const PlaylistSubtitle = styled.div`
 	font-size: 12px;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 `
 
 const PlaylistHeader = ({ name, author }) => (

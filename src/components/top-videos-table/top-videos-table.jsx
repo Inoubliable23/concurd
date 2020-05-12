@@ -63,13 +63,13 @@ const Title = styled.a`
 
 const ChannelName = styled.div`
 	font-size: 14px;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 `
 
 const Likes = styled.div`
 	justify-self: center;
 	font-size: 14px;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 `
 
 const TopVideosTable = ({ fetchTopVideos, videos }) => {

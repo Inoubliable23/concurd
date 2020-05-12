@@ -24,7 +24,7 @@ const Image = styled.img`
 
 const ImagePlaceholder = styled.div`
 	height: 100%;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 	padding-left: 20px;
 `
 
@@ -62,7 +62,7 @@ const Name = styled.div`
 
 const Description = styled.div`
 	font-size: 14px;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 	margin-top: 8px;
 `
 

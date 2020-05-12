@@ -10,7 +10,7 @@ const Container = styled.div`
 	height: 100vh;
 	width: 250px;
 	padding: 20px 0;
-	background-color: #1B1B36;
+	background-color: ${props => props.theme.primaryLight};
 	box-shadow: 0px 1px 8px rgba(0,0,0,0.2), 0px 3px 3px rgba(0,0,0,0.12), 0px 3px 4px rgba(0,0,0,0.14);
 `
 
@@ -40,7 +40,7 @@ const Sidebar = ({ fetchMyPlaylists, myPlaylists }) => {
 			<Logo to={'/'}>concurd</Logo>
 
 			<SectionTitle>Browse</SectionTitle>
-			<MenuItem label='Favourite' linkUrl={'/favourite'} iconKey='heart' />
+			<MenuItem label='Favourites' linkUrl={'/favourites'} iconKey='heart' />
 			<MenuItem label='Play History' linkUrl={'/history'} iconKey='history' />
 
 			<SectionTitle>Your Playlists</SectionTitle>

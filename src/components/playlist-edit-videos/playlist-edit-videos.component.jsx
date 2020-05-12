@@ -52,11 +52,11 @@ const Title = styled.div``
 
 const ChannelName = styled.div`
 	font-size: 14px;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 `
 
 const Date = styled.div`
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 `
 
 const IconContainer = styled.div`
@@ -66,7 +66,7 @@ const IconContainer = styled.div`
 
 const Remove = styled.div`
 	justify-self: center;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 	cursor: pointer;
 `
 

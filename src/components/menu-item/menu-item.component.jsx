@@ -13,17 +13,17 @@ const Container = styled(NavLink)`
 	margin-right: 30px;
 	font-size: 15px;
 	border-radius: 0 30px 30px 0;
-	color: #9A9AAB;
+	color: ${props => props.theme.subtext};
 	cursor: pointer;
 	transition: all 0.1s ease-out;
 
 	&:hover {
-		background-color: #F5A623;
+		background-color: ${props => props.theme.secondary};
 		color: #fff;
 	}
 
 	&.active {
-		background-color: #F5A623;
+		background-color: ${props => props.theme.secondary};
 		color: #fff;
 	}
 `

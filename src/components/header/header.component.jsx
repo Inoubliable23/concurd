@@ -8,7 +8,7 @@ import LoginDropdown from '../login-dropdown/login-dropdown.component';
 
 const Container = styled.div`
 	display: flex;
-	border-bottom: 2px solid #1B1B36;
+	border-bottom: 2px solid ${props => props.theme.primaryLight};
 `
 
 const SearchContainer = styled.div`
@@ -27,10 +27,10 @@ const Search = styled.input`
 	font-size: 14px;
 	padding: 5px 8px;
 	background-color: transparent;
-  color: #9A9AAB;
+  color: ${props => props.theme.subtext};
 
 	::placeholder {
-		color: #9A9AAB;
+		color: ${props => props.theme.subtext};
 		opacity: 1;
 	}
 `
@@ -41,7 +41,7 @@ const LoginContainer = styled.div`
 	align-items: center;
 	width: 200px;
 	font-size: 14px;
-	border-left: 2px solid #1B1B36;
+	border-left: 2px solid ${props => props.theme.primaryLight};
 	position: relative;
 `
 

@@ -3,36 +3,12 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { googleSignIn } from '../../redux/user/user.actions';
-import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
 import LoginDropdown from '../login-dropdown/login-dropdown.component';
+import HeaderSearch from '../header-search/header-search.component';
 
 const Container = styled.div`
 	display: flex;
 	border-bottom: 2px solid ${props => props.theme.primaryLight};
-`
-
-const SearchContainer = styled.div`
-	flex: 1;
-	display: flex;
-	padding: 15px 30px;
-`
-
-const SearchIconContainer = styled.div`
-	width: 26px;
-	height: 26px;
-`
-
-const Search = styled.input`
-	width: 100%;
-	font-size: 14px;
-	padding: 5px 8px;
-	background-color: transparent;
-  color: ${props => props.theme.subtext};
-
-	::placeholder {
-		color: ${props => props.theme.subtext};
-		opacity: 1;
-	}
 `
 
 const LoginContainer = styled.div`
@@ -67,12 +43,7 @@ const GoogleSignInButton = styled.button`
 const Header = ({ user, signIn }) => {
 	return (
 		<Container>
-			<SearchContainer>
-				<SearchIconContainer>
-					<SearchIcon />
-				</SearchIconContainer>
-				<Search type='text' placeholder='Search Playlist' />
-			</SearchContainer>
+			<HeaderSearch />
 			<LoginContainer>
 				{
 					user ?

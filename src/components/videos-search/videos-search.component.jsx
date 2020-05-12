@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { fetchSearchStart, clearSearchResults } from '../../redux/search/search.actions';
-import { selectSearchResults } from '../../redux/search/search.selectors';
-import SearchResult from '../search-result/search-result.component';
+import { fetchVideosSearchStart, clearVideosSearchResults } from '../../redux/search/search.actions';
+import { selectVideosSearchResults } from '../../redux/search/search.selectors';
+import VideoSearchResult from '../video-search-result/video-search-result.component';
 
 const Container = styled.div`
 	position: relative;
@@ -59,7 +59,7 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideo
 			<SearchDropdown>
 				{
 					searchResults.map(result => (
-						<SearchResult
+						<VideoSearchResult
 							key={result.id}
 							video={result}
 							alreadyAdded={blacklist.indexOf(result.id) !== -1}
@@ -73,12 +73,12 @@ const VideosSearch = ({ searchVideos, searchResults, clearSearchResults, onVideo
 }
 
 const mapStateToProps = state => ({
-	searchResults: selectSearchResults(state)
+	searchResults: selectVideosSearchResults(state)
 });
 
 const mapDispatchToProps = {
-	searchVideos: fetchSearchStart,
-	clearSearchResults
+	searchVideos: fetchVideosSearchStart,
+	clearSearchResults: clearVideosSearchResults
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideosSearch);

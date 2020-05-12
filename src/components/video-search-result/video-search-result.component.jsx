@@ -37,7 +37,7 @@ const ChannelName = styled.div`
 	color: #888;
 `
 
-const SearchResult = ({ video, onClick, alreadyAdded }) => {
+const VideoSearchResult = ({ video, onClick, alreadyAdded }) => {
 
 	const handleClick = () => {
 		if (!alreadyAdded) {
@@ -57,4 +57,4 @@ const SearchResult = ({ video, onClick, alreadyAdded }) => {
 	)
 };
 
-export default SearchResult;
+export default VideoSearchResult;

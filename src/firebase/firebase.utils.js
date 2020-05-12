@@ -97,6 +97,12 @@ export const updateDocument = (collectionKey, objectToUpdate) => {
 	return docRef.set(objectToUpdate, {merge: true});
 }
 
+export const searchPlaylists = async queryString => {
+	const playlistsRef = firestore.collection('playlists');
+	const snapshot = await playlistsRef.where('name', '==', queryString).get();
+	return convertSnapshotToArray(snapshot);
+}
+
 export const getPlaylist = async playlistId => {
 	const playlistRef = firestore.collection('playlists').doc(playlistId);
 	const snapshot = await playlistRef.get();
@@ -110,22 +116,19 @@ export const getVideosByIds = async ids => {
 export const getTopVideos = async numberOfVideos => {
 	const videosRef = firestore.collection('videos');
 	const snapshot = await videosRef.orderBy('likesCount', 'desc').limit(numberOfVideos).get();
-	const videosArray = convertSnapshotToArray(snapshot);
-	return videosArray;
+	return convertSnapshotToArray(snapshot);
 }
 
 export const getMyPlaylists = async userId => {
 	const playlistsRef = firestore.collection('playlists');
 	const snapshot = await playlistsRef.where('author.id', '==', userId).get();
-	const playlists = convertSnapshotToMap(snapshot);
-	return playlists;
+	return convertSnapshotToMap(snapshot);
 }
 
 export const getCollectionMap = async collectionKey => {
 	const collectionRef = firestore.collection(collectionKey);
 	const snapshot = await collectionRef.get();
-	const collectionMap = convertSnapshotToMap(snapshot);
-	return collectionMap;
+	return convertSnapshotToMap(snapshot);
 }
 
 export const uploadPlaylistImage = async image => {

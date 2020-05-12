@@ -1,22 +1,32 @@
-import { throttle, put, all, call } from 'redux-saga/effects';
+import { throttle, put, all, call, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
-import { FETCH_SEARCH_START, FETCH_SEARCH_SUCCESS, FETCH_SEARCH_FAILURE } from './search.types';
+import { FETCH_VIDEOS_SEARCH_START, FETCH_PLAYLISTS_SEARCH_START } from './search.types';
+import { fetchPlaylistsSearchSuccess, fetchPlaylistsSearchFailure, fetchVideosSearchSuccess, fetchVideosSearchFailure } from './search.actions';
+import { searchPlaylists } from '../../firebase/firebase.utils';
 
-function* onFetchSearchStart() {
-	yield throttle(500, FETCH_SEARCH_START, fetchSearchAsync);
+function* onFetchPlaylistsSearchStart() {
+	yield takeLatest(FETCH_PLAYLISTS_SEARCH_START, fetchPlaylistsSearchAsync);
 }
 
-const fetchSearchSuccess = payload => ({
-	type: FETCH_SEARCH_SUCCESS,
-	payload
-});
+function* onFetchVideosSearchStart() {
+	yield throttle(500, FETCH_VIDEOS_SEARCH_START, fetchVideosSearchAsync);
+}
 
-const fetchSearchFailure = payload => ({
-	type: FETCH_SEARCH_FAILURE,
-	payload
-});
+function* fetchPlaylistsSearchAsync({ payload: { queryString } }) {
+	try {
+		const playlists = yield searchPlaylists(queryString);
+		console.log(playlists);
 
-function* fetchSearchAsync({ payload: { queryString } }) {
+		yield put(fetchPlaylistsSearchSuccess({
+			queryString,
+			searchResults: playlists
+		}));
+	} catch(error) {
+		yield put(fetchPlaylistsSearchFailure(error.message));
+	}
+}
+
+function* fetchVideosSearchAsync({ payload: { queryString } }) {
 	try {
 		const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
@@ -41,17 +51,18 @@ function* fetchSearchAsync({ payload: { queryString } }) {
 			}
 		});
 
-		yield put(fetchSearchSuccess({
+		yield put(fetchVideosSearchSuccess({
 			queryString,
 			searchResults: searchResultsMapped
 		}));
 	} catch(error) {
-		yield put(fetchSearchFailure(error.message));
+		yield put(fetchVideosSearchFailure(error.message));
 	}
 }
 
 export function* searchSagas() {
 	yield all([
-		call(onFetchSearchStart)
+		call(onFetchPlaylistsSearchStart),
+		call(onFetchVideosSearchStart)
 	]);
 }

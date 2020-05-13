@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import MenuItem from '../menu-item/menu-item.component';
 import { selectMyPlaylists } from '../../redux/playlist/playlist.selectors';
 import { fetchMyPlaylists } from '../../redux/playlist/playlist.actions';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const Container = styled.div`
 	height: 100vh;
@@ -29,11 +30,11 @@ const SectionTitle = styled.div`
 	font-size: 16px;
 `
 
-const Sidebar = ({ fetchMyPlaylists, myPlaylists }) => {
+const Sidebar = ({ user, fetchMyPlaylists, myPlaylists }) => {
 
 	useEffect(() => {
-		fetchMyPlaylists();
-	}, [fetchMyPlaylists]);
+		user && fetchMyPlaylists();
+	}, [user, fetchMyPlaylists]);
 
 	return (
 		<Container>
@@ -43,17 +44,23 @@ const Sidebar = ({ fetchMyPlaylists, myPlaylists }) => {
 			<MenuItem label='Favourites' linkUrl={'/favourites'} iconKey='heart' />
 			<MenuItem label='Play History' linkUrl={'/history'} iconKey='history' />
 
-			<SectionTitle>Your Playlists</SectionTitle>
 			{
-				myPlaylists &&
-				myPlaylists.map(playlist => <MenuItem key={playlist.id} label={playlist.name} linkUrl={`/edit/${playlist.id}`} iconKey='playlist' />)
+				user &&
+				<>
+					<SectionTitle>Your Playlists</SectionTitle>
+					{
+						myPlaylists &&
+						myPlaylists.map(playlist => <MenuItem key={playlist.id} label={playlist.name} linkUrl={`/edit/${playlist.id}`} iconKey='playlist' />)
+					}
+					<MenuItem label={'New Playlist'} linkUrl={'/create'} iconKey='add' />
+				</>
 			}
-			<MenuItem label={'New Playlist'} linkUrl={'/create'} iconKey='add' />
 		</Container>
 	);
 }
 
 const mapStateToProps = state => ({
+	user: selectCurrentUser(state),
 	myPlaylists: selectMyPlaylists(state)
 });
 

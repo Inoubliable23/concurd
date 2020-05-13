@@ -15,8 +15,6 @@ function* onFetchVideosSearchStart() {
 function* fetchPlaylistsSearchAsync({ payload: { queryString } }) {
 	try {
 		const playlists = yield searchPlaylists(queryString);
-		console.log(playlists);
-
 		yield put(fetchPlaylistsSearchSuccess({
 			queryString,
 			searchResults: playlists

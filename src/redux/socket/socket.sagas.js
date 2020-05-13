@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import { VIDEO_SET_PAUSE, VIDEO_SET_PLAY } from '../video/video.types';
 import { videoPausedViaSocket, videoPlayedViaSocket } from '../video/video.actions';
 import { TOGGLE_LIKE, ADD_VIDEO_TO_CURRENT_PLAYLIST, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, ADD_COMMENT } from '../playlist/playlist.types';
-import { selectCurrentUserId } from '../user/user.selectors';
+import { selectCurrentUser } from '../user/user.selectors';
 import { CONNECT_TO_SOCKET } from './socket.types';
 import { likeToggledViaSocket, videoAddedViaSocket, videoRemovedViaSocket } from './socket.actions';
 import { commentAddedViaSocket } from '../playlist/playlist.actions';
@@ -23,10 +23,10 @@ const SocketEvents = {
 
 function* onConnectToSocket() {
 	const { payload: { playlistId } } = yield take(CONNECT_TO_SOCKET);
-	const currentUserId = yield select(selectCurrentUserId);
+	const currentUser = yield select(selectCurrentUser);
 	const socket = yield call(connect, {
 		playlistId,
-		currentUserId
+		currentUserId: currentUser.id
 	});
 	yield fork(read, socket);
 	yield fork(write, socket);

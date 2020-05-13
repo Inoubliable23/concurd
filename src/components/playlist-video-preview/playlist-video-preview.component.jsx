@@ -5,6 +5,7 @@ import { ReactComponent as ThumbsUp } from '../../assets/icons/thumbs-up.svg';
 import { ReactComponent as ThumbsUpFilled } from '../../assets/icons/thumbs-up-filled.svg';
 import { removeVideoFromCurrentPlaylist, toggleLike } from '../../redux/playlist/playlist.actions';
 import { selectLikesCount, selectIsVideoLikedByCurrentUser } from '../../redux/playlist/playlist.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const playingCSS = css`
 	background-color: rgba(0, 0, 0, 0.3);
@@ -58,7 +59,7 @@ const ThumbsUpContainer = styled.div`
 	width: 35px;
 	height: 35px;
 	padding: 3px;
-	cursor: pointer;
+	cursor: ${props => props.clickable ? 'pointer' : 'auto'};
 `
 
 const LikesCount = styled.div`
@@ -100,7 +101,7 @@ const RemoveIcon = styled.span`
 	cursor: pointer;
 `
 
-const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, isPlaying, removeVideoFromCurrentPlaylist, toggleLike }) => {
+const PlaylistVideoPreview = ({ user, id, youtubeData, addedBy, likesCount, isLiked, isPlaying, removeVideoFromCurrentPlaylist, toggleLike }) => {
 
 	const [fadeOut, setFadeOut] = useState(false);
 
@@ -109,7 +110,7 @@ const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, i
 	}
 
 	const handleThumbsUpClick = () => {
-		toggleLike({
+		user && toggleLike({
 			videoId: id,
 			like: !isLiked
 		});
@@ -128,7 +129,10 @@ const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, i
 				<PlayingArrowMark />
 			}
 			<LikesContainer>
-				<ThumbsUpContainer onClick={handleThumbsUpClick}>
+				<ThumbsUpContainer
+					clickable={!!user}
+					onClick={handleThumbsUpClick}
+				>
 				{
 					isLiked ?
 					<ThumbsUpFilled />
@@ -149,12 +153,16 @@ const PlaylistVideoPreview = ({ id, youtubeData, addedBy, likesCount, isLiked, i
 				}
 				<AddedBy>added by <AddedByName>{addedBy.name}</AddedByName></AddedBy>
 			</InfoContainer>
-			<RemoveIcon onClick={handleRemoveClick}>&#10006;</RemoveIcon>
+			{
+				user &&
+				<RemoveIcon onClick={handleRemoveClick}>&#10006;</RemoveIcon>
+			}
 		</Container>
 	);
 }
 
 const mapStateToProps = (state, props) => ({
+	user: selectCurrentUser(state),
 	likesCount: selectLikesCount(state, props.id),
 	isLiked: selectIsVideoLikedByCurrentUser(state, props.id)
 });

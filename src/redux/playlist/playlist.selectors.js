@@ -92,9 +92,10 @@ export const selectIsVideoLikedByCurrentUser = (state, videoId) => {
 	if (!currentPlaylist) return;
 
 	const video = currentPlaylist.videos.byId[videoId];
-	const currentUserId = state.user.currentUser.id;
+	const currentUser = state.user.currentUser;
+	if (!currentUser) return;
 
-	return !!video.likedBy[currentUserId];
+	return !!video.likedBy[currentUser.id];
 };
 
 export const selectPlaylistComments = state => {

@@ -12,6 +12,7 @@ import Playlist from '../../components/playlist/playlist.component';
 import VideosSearch from '../../components/videos-search/videos-search.component';
 import { connectToSocket } from '../../redux/socket/socket.actions';
 import CommentsSection from '../../components/comments-section/comments-section.component';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const Container = styled.div`
 	display: flex;
@@ -35,7 +36,7 @@ const PlaylistWithSearch = styled.div`
 	width: 50%;
 `
 
-const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentPlaylist, setCurrentVideo, connectToSocket, addVideoToCurrentPlaylist }) => {
+const WatchPage = ({ match, user, playlist, currentVideoId, fetchPlaylist, setCurrentPlaylist, setCurrentVideo, connectToSocket, addVideoToCurrentPlaylist }) => {
 
 	const playlistId = match.params.playlistId;
 	
@@ -62,10 +63,11 @@ const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentP
 	}, [setCurrentVideo, playlist, prevPlaylist]);
 	
 	useEffect(() => {
+		user &&
 		connectToSocket({
 			playlistId
 		});
-	}, [connectToSocket, playlistId]);
+	}, [user, connectToSocket, playlistId]);
 
 	const handleVideoSelect = video => {
 		addVideoToCurrentPlaylist({
@@ -115,6 +117,7 @@ const WatchPage = ({ match, playlist, currentVideoId, fetchPlaylist, setCurrentP
 }
 
 const mapStateToProps = (state) => ({
+	user: selectCurrentUser(state),
 	playlist: selectCurrentPlaylist(state),
 	currentVideoId: selectCurrentVideoId(state)
 });

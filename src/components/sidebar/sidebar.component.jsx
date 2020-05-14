@@ -9,7 +9,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const Container = styled.div`
 	height: 100vh;
-	width: 250px;
+	min-width: 250px;
 	padding: 20px 0;
 	background-color: ${props => props.theme.primaryLight};
 	box-shadow: 0px 1px 8px rgba(0,0,0,0.2), 0px 3px 3px rgba(0,0,0,0.12), 0px 3px 4px rgba(0,0,0,0.14);

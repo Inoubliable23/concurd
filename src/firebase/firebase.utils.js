@@ -125,9 +125,9 @@ export const getMyPlaylists = async userId => {
 	return convertSnapshotToMap(snapshot);
 }
 
-export const getCollectionMap = async collectionKey => {
-	const collectionRef = firestore.collection(collectionKey);
-	const snapshot = await collectionRef.get();
+export const getTopPlaylists = async numberOfPlaylists => {
+	const collectionRef = firestore.collection('playlists');
+	const snapshot = await collectionRef.limit(numberOfPlaylists).get();
 	return convertSnapshotToMap(snapshot);
 }
 

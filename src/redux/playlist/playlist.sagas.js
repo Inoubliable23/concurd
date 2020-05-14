@@ -1,7 +1,7 @@
 import { takeEvery, takeLatest, call, all, put, select } from 'redux-saga/effects';
 import { v4 as uuid } from 'uuid';
 import history from '../../history';
-import { uploadPlaylistImage, addDocument, addCollectionAndDocuments, updateDocument, getCollectionMap, updateVideoLikes, addVideoToPlaylist, removeVideoFromPlaylist, getPlaylist, addCommentToPlaylist, getMyPlaylists } from '../../firebase/firebase.utils';
+import { uploadPlaylistImage, addDocument, addCollectionAndDocuments, updateDocument, getTopPlaylists, updateVideoLikes, addVideoToPlaylist, removeVideoFromPlaylist, getPlaylist, addCommentToPlaylist, getMyPlaylists } from '../../firebase/firebase.utils';
 import { ADD_VIDEO_TO_CURRENT_PLAYLIST, ADD_VIDEO, TOGGLE_LIKE_WITH_CURRENT_USER, TOGGLE_LIKE, FETCH_TOP_PLAYLISTS, CREATE_PLAYLIST, PLAYLIST_DRAFT_ADD_VIDEO_WITH_CURRENT_USER, REMOVE_VIDEO_FROM_CURRENT_PLAYLIST, FETCH_PLAYLIST, ADD_COMMENT_TO_CURRENT_PLAYLIST, ADD_COMMENT, FETCH_MY_PLAYLISTS, SAVE_PLAYLIST_EDIT } from './playlist.types';
 import { selectCurrentUser } from '../user/user.selectors';
 import { selectPlaylistDraft, selectCurrentPlaylistId, selectPlaylistById } from './playlist.selectors';
@@ -62,7 +62,7 @@ function* onAddCommentDB() {
 
 function* fetchTopPlaylistsAsync() {
 	try {
-		const playlistsMap = yield getCollectionMap('playlists');
+		const playlistsMap = yield getTopPlaylists(5);
 		yield put(fetchTopPlaylistsSuccess(playlistsMap));
 	} catch (error) {
 		console.log(error);

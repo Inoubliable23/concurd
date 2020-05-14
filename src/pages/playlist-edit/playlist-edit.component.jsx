@@ -44,6 +44,7 @@ const PlaylistEdit = ({ match, fetchPlaylist, playlist, playlistDraft, savePlayl
 				playlist &&
 				<>
 					<PlaylistEditMain
+						key={playlist.id}
 						playlist={playlist}
 						playlistDraft={playlistDraft}
 						editMode={editMode}

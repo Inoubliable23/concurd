@@ -48,7 +48,7 @@ const opts = {
 	width: '100%',
 	playerVars: {
 		enablejsapi: 1,
-		autoplay: 0
+		autoplay: 1
 	}
 }
 
